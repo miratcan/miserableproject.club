@@ -7,16 +7,16 @@
     {% csrf_token %}
     {{ form.non_field_errors }}
     <div class="field">
-      <label for="id_title">Title</label>
-      {{ form.title }}
-      {{ form.title.errors }}
-      {% if form.title.help_text %}<small class="help">{{ form.title.help_text }}</small>{% endif %}
+      <label for="id_project_name">Project name</label>
+      {{ form.project_name }}
+      {{ form.project_name.errors }}
+      {% if form.project_name.help_text %}<small class="help">{{ form.project_name.help_text }}</small>{% endif %}
     </div>
     <div class="field">
-      <label for="id_snapshot">Project Snapshot (280–320)</label>
-      {{ form.snapshot }}
-      {{ form.snapshot.errors }}
-      {% if form.snapshot.help_text %}<small class="help">{{ form.snapshot.help_text }}</small>{% endif %}
+      <label for="id_purpose">Purpose (280–320)</label>
+      {{ form.purpose }}
+      {{ form.purpose.errors }}
+      {% if form.purpose.help_text %}<small class="help">{{ form.purpose.help_text }}</small>{% endif %}
     </div>
     <div class="field">
       <label>Where the idea came from?</label>
@@ -90,8 +90,8 @@
     <hr>
     <h2>Preview</h2>
     <article class="post">
-      <h1>{{ preview.title }}</h1>
-      <p class="snapshot">{{ preview.snapshot }}</p>
+      <h1>{{ preview.project_name }}</h1>
+      <p class="purpose">{{ preview.purpose }}</p>
       <section>
         <h3>Where the idea came from?</h3>
         <div class="md">{{ preview.idea|safe }}</div>

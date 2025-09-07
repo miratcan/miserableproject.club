@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
-{% block title %}{{ object.title }} — miserableproject.club{% endblock %}
-{% block page_title %}{{ object.title }}{% endblock %}
-{% block page_description %}{{ object.snapshot }}{% endblock %}
-{% block meta_description %}{{ object.snapshot }}{% endblock %}
+{% block title %}{{ object.project_name }} — miserableproject.club{% endblock %}
+{% block page_title %}{{ object.project_name }}{% endblock %}
+{% block page_description %}{{ object.purpose }}{% endblock %}
+{% block meta_description %}{{ object.purpose }}{% endblock %}
 {% block canonical %}{{ request.scheme }}://{{ request.get_host }}{{ object.get_absolute_url }}{% endblock %}
 {% block content %}
   <article class="post">
-    <h1>{{ object.title }}</h1>
-    <p class="snapshot">{{ object.snapshot }}</p>
+    <h1>{{ object.project_name }}</h1>
+    <p class="purpose">{{ object.purpose }}</p>
 
     {% if object.links_json %}
       <p class="links">

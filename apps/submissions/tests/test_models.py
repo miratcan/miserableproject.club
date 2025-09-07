@@ -17,10 +17,10 @@ class StripH1H2Tests(TestCase):
 
 
 class SubmissionSlugTests(TestCase):
-    def _create_submission(self, title="My Title"):
+    def _create_submission(self, project_name="My Project"):
         return Submission.objects.create(
-            title=title,
-            snapshot="s" * 280,
+            project_name=project_name,
+            purpose="s" * 280,
             idea_md="idea",
             tech_md="tech",
             execution_md="exec",
@@ -29,15 +29,15 @@ class SubmissionSlugTests(TestCase):
         )
 
     @patch("apps.submissions.models._short_id", return_value="abc123")
-    def test_generates_slug_from_title_and_short_id(self, mock_short_id):
+    def test_generates_slug_from_project_name_and_short_id(self, mock_short_id):
         sub = self._create_submission()
-        self.assertTrue(sub.slug.startswith("my-title-"))
-        self.assertEqual(sub.slug, "my-title-abc123")
+        self.assertTrue(sub.slug.startswith("my-project-"))
+        self.assertEqual(sub.slug, "my-project-abc123")
 
     @patch("apps.submissions.models._short_id", side_effect=["abc123", "abc123", "def456"])
-    def test_slug_uniqueness_with_duplicate_titles(self, mock_short_id):
-        first = self._create_submission(title="Same Title")
-        second = self._create_submission(title="Same Title")
-        self.assertEqual(first.slug, "same-title-abc123")
-        self.assertEqual(second.slug, "same-title-def456")
+    def test_slug_uniqueness_with_duplicate_names(self, mock_short_id):
+        first = self._create_submission(project_name="Same Name")
+        second = self._create_submission(project_name="Same Name")
+        self.assertEqual(first.slug, "same-name-abc123")
+        self.assertEqual(second.slug, "same-name-def456")
         self.assertNotEqual(first.slug, second.slug)

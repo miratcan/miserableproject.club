@@ -43,8 +43,8 @@ class SubmitView(LoginRequiredMixin, FormView):
             ctx = self.get_context_data(form=form)
             data = form.cleaned_data
             ctx['preview'] = {
-                'title': data['title'],
-                'snapshot': data['snapshot'],
+                'project_name': data['project_name'],
+                'purpose': data['purpose'],
                 'idea': render_markdown(data['idea_md']),
                 'tech': render_markdown(data['tech_md']),
                 'execution': render_markdown(data['execution_md']),
@@ -77,10 +77,10 @@ class LatestFeed(Feed):
         return Submission.objects.filter(status='published').order_by('-created_at')[:50]
 
     def item_title(self, item: Submission):
-        return item.title
+        return item.project_name
 
     def item_description(self, item: Submission):
-        return item.snapshot
+        return item.purpose
 
     def item_link(self, item: Submission):
         return reverse('submission_detail', args=[item.slug])
