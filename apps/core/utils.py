@@ -5,9 +5,8 @@ from apps.submissions.models import Submission
 def get_tag_items():
     """Return ordered tag names, tag items and slug-to-name mapping."""
     names = []
-    for s in Submission.objects.filter(status='published').only('stack_tags_json'):
-        if s.stack_tags_json:
-            names.extend([t for t in s.stack_tags_json if isinstance(t, str) and t])
+    for s in Submission.objects.filter(status='published').prefetch_related('stack_tags'):
+        names.extend([t for t in s.stack_tags.names() if t])
     seen = set()
     names = [t for t in names if not (t in seen or seen.add(t))]
     tag_items = []

@@ -52,7 +52,7 @@ class SubmitView(LoginRequiredMixin, FormView):
                 'lessons': render_markdown(data['lessons_md']),
                 'links': data.get('links_json', []),
                 'markets': data.get('markets_json', []),
-                'stacks': data.get('stack_tags_json', []),
+                'stacks': data.get('stack_tags', []),
             }
             return self.render_to_response(ctx)
 
@@ -62,9 +62,9 @@ class SubmitView(LoginRequiredMixin, FormView):
         # attach parsed json fields
         s.links_json = form.cleaned_data.get('links_json', [])
         s.markets_json = form.cleaned_data.get('markets_json', [])
-        s.stack_tags_json = form.cleaned_data.get('stack_tags_json', [])
         s.status = 'published'
         s.save()
+        form.save_m2m()
         return redirect(s.get_absolute_url())
 
 

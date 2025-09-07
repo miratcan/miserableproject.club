@@ -1,4 +1,5 @@
 from django import forms
+from taggit.forms import TagField
 from .models import Submission, strip_h1_h2
 
 
@@ -12,7 +13,7 @@ class SubmissionForm(forms.ModelForm):
         required=False,
         help_text='Optional. Comma‑separated markets/geo or audience (e.g., B2B, US, EU).',
     )
-    stack_tags = forms.CharField(
+    stack_tags = TagField(
         required=False,
         help_text='Optional. Comma‑separated tech or stack tags (e.g., Django, Next.js, Stripe).',
     )
@@ -22,7 +23,7 @@ class SubmissionForm(forms.ModelForm):
         fields = [
             'project_name', 'purpose',
             'idea_md', 'tech_md', 'execution_md', 'failure_md', 'lessons_md',
-            'timeline_text', 'revenue_text', 'spend_text',
+            'timeline_text', 'revenue_text', 'spend_text', 'stack_tags',
         ]
         help_texts = {
             'project_name': 'Max 120 characters. Clear and descriptive.',
@@ -65,15 +66,12 @@ class SubmissionForm(forms.ModelForm):
         for f in ['idea_md', 'tech_md', 'execution_md', 'failure_md', 'lessons_md']:
             self._strip_h1_h2_for(f)
 
-        # parse links/markets/stack_tags
+        # parse links/markets
         raw_links = (self.data.get('links') or '').strip()
         links = [l.strip() for l in raw_links.splitlines() if l.strip()]
         cleaned['links_json'] = links
 
         markets = [s.strip() for s in (self.data.get('markets') or '').split(',') if s.strip()]
         cleaned['markets_json'] = markets
-
-        stacks = [s.strip() for s in (self.data.get('stack_tags') or '').split(',') if s.strip()]
-        cleaned['stack_tags_json'] = stacks
 
         return cleaned
