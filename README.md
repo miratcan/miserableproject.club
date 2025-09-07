@@ -101,7 +101,7 @@ just collectstatic             # collect static to STATIC_ROOT
 
 ## Notes
 - Markdown sanitize: `apps/submissions/markdown.py` (bleach + markdown)
-- Clean URL: `/p/{slug}` (slug = `slugify(title)` + 6‑char id)
+- Clean URL: `/p/{slug}` (slug = `slugify(project_name)` + 6‑char id)
 - Search and tag filters are tracked for v1.1
 
 ## Shared Templates (Partials)
@@ -111,7 +111,7 @@ These templates are reused across pages to keep markup consistent:
 - `templates/partials/footer.html`: Footer and RSS
 - `templates/partials/messages.html`: Django messages
 - `templates/partials/tag_nav.html`: Tag navigation; expects `tag_items`, `active_tag`
-- `templates/partials/items_list.html`: Generic list; items need `get_absolute_url`, `title`, `created_at`
+- `templates/partials/items_list.html`: Generic list; items need `get_absolute_url`, `project_name`, `created_at`
 - `templates/partials/pagination.html`: Pagination; expects `page_obj`, `prev_url`, `next_url`
 - `templates/partials/robots_noindex_if_paginated.html`: Adds `noindex,follow` for page > 1
 

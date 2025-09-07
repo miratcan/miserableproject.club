@@ -1,7 +1,7 @@
 <ul id="{{ list_id|default:'articles' }}">
   {% for item in items %}
     <li>
-      <a href="{{ item.get_absolute_url }}">{{ item.title }}</a>
+      <a href="{{ item.get_absolute_url }}">{{ item.project_name }}</a>
       {% if date_format %}
         <small>{{ item.created_at|date:date_format }}</small>
       {% else %}

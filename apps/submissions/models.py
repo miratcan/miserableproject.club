@@ -33,9 +33,9 @@ def strip_h1_h2(md: str) -> str:
 
 class Submission(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
-    title = models.CharField(max_length=120)
+    project_name = models.CharField(max_length=120)
     slug = models.SlugField(max_length=200, unique=True, db_index=True)
-    snapshot = models.CharField(max_length=320)
+    purpose = models.CharField(max_length=320)
 
     idea_md = models.TextField()
     tech_md = models.TextField()
@@ -58,7 +58,7 @@ class Submission(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return self.title
+        return self.project_name
 
     def get_absolute_url(self):
         return reverse('submission_detail', args=[self.slug])
@@ -72,7 +72,7 @@ class Submission(models.Model):
         self.lessons_md = strip_h1_h2(self.lessons_md)
 
         if not self.slug:
-            base = slugify(self.title)[:64] or 'post'
+            base = slugify(self.project_name)[:64] or 'post'
             sid = _short_id()
             candidate = f"{base}-{sid}"
             # ensure uniqueness with a couple tries

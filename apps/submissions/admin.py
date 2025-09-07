@@ -4,9 +4,9 @@ from .models import Submission, Report
 
 @admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):
-    list_display = ('title', 'status', 'created_at')
+    list_display = ('project_name', 'status', 'created_at')
     list_filter = ('status', 'created_at')
-    search_fields = ('title', 'snapshot')
+    search_fields = ('project_name', 'purpose')
     actions = ['mark_published', 'mark_removed', 'mark_flagged']
 
     @admin.action(description='Mark selected as published')
