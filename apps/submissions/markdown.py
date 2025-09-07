@@ -1,5 +1,6 @@
 import markdown as _md
 import bleach
+import re
 
 
 ALLOWED_TAGS = [
@@ -23,10 +24,12 @@ def render_markdown(md_text: str) -> str:
         protocols=ALLOWED_PROTOCOLS,
         strip=True,
     )
-    # Ensure links have rel
-    def _add_rel(m):
-        return m.replace('<a ', '<a rel="nofollow noopener" ', 1) if ' rel=' not in m else m
-    # quick and simple injection for rel attr
-    cleaned = cleaned.replace('<a ', '<a rel="nofollow noopener" ')
+    # Ensure links without a rel attribute get the default
+    cleaned = re.sub(
+        r"<a(?![^>]*\brel=)([^>]*)>",
+        r'<a\1 rel="nofollow noopener">',
+        cleaned,
+        flags=re.IGNORECASE,
+    )
     return cleaned
 
