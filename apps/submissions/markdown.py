@@ -1,7 +1,4 @@
-import markdown as _md
-import bleach
-import re
-
+import markownify
 
 ALLOWED_TAGS = [
     'p', 'br', 'ul', 'ol', 'li', 'blockquote', 'code', 'pre', 'em', 'strong',
@@ -14,22 +11,9 @@ ALLOWED_PROTOCOLS = ['http', 'https', 'mailto']
 
 
 def render_markdown(md_text: str) -> str:
-    if not md_text:
-        return ''
-    html = _md.markdown(md_text, extensions=['extra', 'sane_lists', 'nl2br'])
-    cleaned = bleach.clean(
-        html,
+    return markownify.render(
+        md_text,
         tags=ALLOWED_TAGS,
-        attributes=ALLOWED_ATTRS,
+        attrs=ALLOWED_ATTRS,
         protocols=ALLOWED_PROTOCOLS,
-        strip=True,
     )
-    # Ensure links without a rel attribute get the default
-    cleaned = re.sub(
-        r"<a(?![^>]*\brel=)([^>]*)>",
-        r'<a\1 rel="nofollow noopener">',
-        cleaned,
-        flags=re.IGNORECASE,
-    )
-    return cleaned
-
