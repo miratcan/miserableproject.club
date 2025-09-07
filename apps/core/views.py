@@ -30,9 +30,9 @@ class TagView(TemplateView):
         active_name = mapping.get(slug)
 
         # Build base queryset and filter in Python for SQLite compatibility
-        base_qs = Submission.objects.filter(status='published').order_by('-created_at')
+        base_qs = Submission.objects.filter(status='published').prefetch_related('stack_tags').order_by('-created_at')
         if active_name:
-            items = [s for s in base_qs if s.stack_tags_json and active_name in s.stack_tags_json]
+            items = [s for s in base_qs if active_name in s.stack_tags.names()]
         else:
             items = list(base_qs)
 

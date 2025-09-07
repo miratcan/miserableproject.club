@@ -4,6 +4,7 @@ from django.utils.text import slugify
 from django.urls import reverse
 import secrets
 import string
+from taggit.managers import TaggableManager
 
 
 STATUS_CHOICES = (
@@ -45,7 +46,7 @@ class Submission(models.Model):
 
     links_json = models.JSONField(default=list, blank=True)
     markets_json = models.JSONField(default=list, blank=True)
-    stack_tags_json = models.JSONField(default=list, blank=True)
+    stack_tags = TaggableManager(blank=True)
     timeline_text = models.CharField(max_length=120, blank=True)
     revenue_text = models.CharField(max_length=120, blank=True)
     spend_text = models.CharField(max_length=120, blank=True)

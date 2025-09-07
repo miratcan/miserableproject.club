@@ -18,6 +18,7 @@ dependencies = [
   "requests>=2.31",
   "PyJWT>=2.8",
   "cryptography>=42",
+  "django-taggit>=6.1.0",
 ]
 
 [tool.uv]
