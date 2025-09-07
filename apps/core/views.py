@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView
-from django.utils.text import slugify
 from apps.submissions.models import Submission
+from .utils import get_tag_items
 
 
 class HomeView(TemplateView):
@@ -11,21 +11,7 @@ class HomeView(TemplateView):
         qs = Submission.objects.filter(status='published')
         ctx['submissions'] = qs.order_by('-created_at')[:20]
 
-        # collect available tags and build slug map (name -> slug)
-        names = []
-        for s in Submission.objects.filter(status='published').only('stack_tags_json'):
-            if s.stack_tags_json:
-                names.extend([t for t in s.stack_tags_json if isinstance(t, str) and t])
-        seen = set()
-        names = [t for t in names if not (t in seen or seen.add(t))]
-        tag_items = []
-        used = set()
-        for name in names:
-            s = slugify(name)
-            if s in used:
-                continue
-            used.add(s)
-            tag_items.append({'slug': s, 'name': name})
+        names, tag_items, _ = get_tag_items()
         ctx['tags'] = names
         ctx['tag_items'] = tag_items
         ctx['active_tag'] = None
@@ -40,24 +26,8 @@ class TagView(TemplateView):
         slug = kwargs.get('slug')
         page = int(kwargs.get('page') or 1)
 
-        # Build ordered unique tag names and slug map
-        names = []
-        for s in Submission.objects.filter(status='published').only('stack_tags_json'):
-            if s.stack_tags_json:
-                names.extend([t for t in s.stack_tags_json if isinstance(t, str) and t])
-        seen = set()
-        names = [t for t in names if not (t in seen or seen.add(t))]
-        mapping = []  # list of tuples (slug, name) preserving order and uniqueness by slug
-        used = set()
-        for name in names:
-            s = slugify(name)
-            if s in used:
-                continue
-            used.add(s)
-            mapping.append((s, name))
-
-        slug_to_name = {s: n for s, n in mapping}
-        active_name = slug_to_name.get(slug)
+        names, tag_items, mapping = get_tag_items()
+        active_name = mapping.get(slug)
 
         # Build base queryset and filter in Python for SQLite compatibility
         base_qs = Submission.objects.filter(status='published').order_by('-created_at')
@@ -77,7 +47,7 @@ class TagView(TemplateView):
         ctx['paginator'] = paginator
         ctx['page_obj'] = page_obj
         ctx['tags'] = names
-        ctx['tag_items'] = [{'slug': s, 'name': n} for s, n in mapping]
+        ctx['tag_items'] = tag_items
         ctx['active_tag'] = slug
         return ctx
 
