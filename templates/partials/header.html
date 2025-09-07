@@ -1,0 +1,13 @@
+<header>
+  <nav>
+    <div class="wrapper">
+      <a {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %} href="/"><span>H</span>ome</a>
+      <a {% if request.resolver_match.url_name == 'submit' %}class="active"{% endif %} href="/submit/"><span>S</span>ubmit</a>
+      {% if request.user.is_authenticated %}
+        <a href="/accounts/logout/"><span>L</span>ogout</a>
+      {% else %}
+        <a {% if request.resolver_match.url_name == 'account_login' %}class="active"{% endif %} href="/accounts/login/"><span>L</span>ogin</a>
+      {% endif %}
+    </div>
+  </nav>
+</header>

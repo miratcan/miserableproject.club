@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}miserableproject.club{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Failure post‑mortems from indie/solo founders — a learning‑oriented mini publication.{% endblock %}">
+  <link rel="canonical" href="{% block canonical %}{{ request.build_absolute_uri }}{% endblock %}">
+  <meta property="og:title" content="{% block og_title %}{% block page_title %}miserableproject.club{% endblock %}{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}{% block page_description %}{% endblock %}{% endblock %}">
+  <meta property="og:image" content="{% block og_image %}{{ DEFAULT_OG_IMAGE|default:'/static/img/og-placeholder.png' }}{% endblock %}">
+  <link rel="stylesheet" href="/static/css/styles.css">
+  {% block head_extra %}{% endblock %}
+</head>
+<body>
+  <div class="screen">
+    {% include 'partials/header.html' %}
+    <main class="wrapper">
+      {% include 'partials/messages.html' %}
+      {% block content %}{% endblock %}
+    </main>
+    {% include 'partials/footer.html' %}
+  </div>
+</body>
+</html>

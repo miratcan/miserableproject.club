@@ -1,0 +1,14 @@
+<ul id="{{ list_id|default:'articles' }}">
+  {% for item in items %}
+    <li>
+      <a href="{{ item.get_absolute_url }}">{{ item.title }}</a>
+      {% if date_format %}
+        <small>{{ item.created_at|date:date_format }}</small>
+      {% else %}
+        <small>{{ item.created_at|date:"m/Y" }}</small>
+      {% endif %}
+    </li>
+  {% empty %}
+    <li>{{ empty_text|default:'No items yet.' }}</li>
+  {% endfor %}
+</ul>

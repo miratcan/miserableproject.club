@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load socialaccount %}
+{% block title %}Login — miserableproject.club{% endblock %}
+{% block page_title %}Login{% endblock %}
+{% block content %}
+  <h1>Login</h1>
+  <p>Login with a third‑party provider:</p>
+  <nav>
+    <div class="wrapper">
+      <a href="{% provider_login_url 'google' process='login' %}"><span>G</span>oogle</a>
+      <a href="{% provider_login_url 'reddit' process='login' %}"><span>R</span>eddit</a>
+    </div>
+  </nav>
+{% endblock %}
+

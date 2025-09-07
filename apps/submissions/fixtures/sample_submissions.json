@@ -1,0 +1,75 @@
+[
+  {
+    "model": "submissions.submission",
+    "pk": 1,
+    "fields": {
+      "user": null,
+      "title": "Earning $10K with 161 Lines of JavaScript",
+      "slug": "earning-10k-with-161-lines-of-javascript",
+      "snapshot": "A tiny script that automated a boring task, accidentally turned into a $10K side project.",
+      "idea_md": "I was repeating the same data cleanup every week. I automated it for myself, then realized others had the exact same pain.",
+      "tech_md": "Vanilla JS + Node CLI. Stripe for payments. No database — kept it stateless.",
+      "execution_md": "Launched on Twitter with a short demo GIF. Took feedback and added only essentials.",
+      "failure_md": "Support requests grew, but the TAM was tiny. Growth stalled after the initial audience was saturated.",
+      "lessons_md": "Solve recurring pains. Keep scope brutally small. Distribution > features.",
+      "links_json": ["https://example.com/demo", "https://example.com/landing"],
+      "markets_json": ["US", "EU"],
+      "stack_tags_json": ["javascript", "saas", "stripe"],
+      "timeline_text": "3 months",
+      "revenue_text": "$10k",
+      "spend_text": "$200",
+      "status": "published",
+      "created_at": "2024-09-15T10:00:00Z",
+      "updated_at": "2024-09-15T10:00:00Z"
+    }
+  },
+  {
+    "model": "submissions.submission",
+    "pk": 2,
+    "fields": {
+      "user": null,
+      "title": "Terminal Journal: Writing from the shell",
+      "slug": "terminal-journal-writing-from-the-shell",
+      "snapshot": "A CLI journaling tool that felt great for me, but never found broad adoption.",
+      "idea_md": "I journal daily and live in the terminal. A CLI felt natural.",
+      "tech_md": "Python, Click, simple file storage. Packaged with PyPI.",
+      "execution_md": "Open-sourced on GitHub, tweeted a demo, wrote docs.",
+      "failure_md": "Most people prefer mobile or web. Terminal-only UX limited reach.",
+      "lessons_md": "Audience-channel fit matters. Meet users where they are.",
+      "links_json": ["https://github.com/example/terminal-journal"],
+      "markets_json": ["Developers"],
+      "stack_tags_json": ["python", "cli", "open-source"],
+      "timeline_text": "6 weeks",
+      "revenue_text": "$0",
+      "spend_text": "$0",
+      "status": "published",
+      "created_at": "2024-08-10T08:30:00Z",
+      "updated_at": "2024-08-10T08:30:00Z"
+    }
+  },
+  {
+    "model": "submissions.submission",
+    "pk": 3,
+    "fields": {
+      "user": null,
+      "title": "Feature-packed, userless",
+      "slug": "feature-packed-userless",
+      "snapshot": "We built a beautiful product with every feature users asked for — and still no one came.",
+      "idea_md": "We interviewed a handful of users and turned every wish into a roadmap.",
+      "tech_md": "Django backend, React frontend, Postgres, Celery for async jobs.",
+      "execution_md": "Shipped weekly. Polished UI. Wrote long changelogs. Waited for signups.",
+      "failure_md": "No clear distribution channel. Messaging was vague. ICP undefined.",
+      "lessons_md": "Define ICP early. Own a distribution channel. Cut scope.",
+      "links_json": ["https://example.com"],
+      "markets_json": ["SMBs"],
+      "stack_tags_json": ["django", "react", "product-market-fit"],
+      "timeline_text": "4 months",
+      "revenue_text": "$0",
+      "spend_text": "$800",
+      "status": "published",
+      "created_at": "2024-07-01T12:00:00Z",
+      "updated_at": "2024-07-01T12:00:00Z"
+    }
+  }
+]
+

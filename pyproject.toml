@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "miserableproject-club"
+version = "0.1.0"
+description = "Yet Another Miserable Project — mini publishing platform for post-mortems"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "Django>=4.2,<5.0",
+  "django-allauth>=0.63",
+  "whitenoise>=6.6",
+  "markdown>=3.6",
+  "bleach>=6.1",
+  "gunicorn>=21.2",
+  "requests>=2.31",
+  "PyJWT>=2.8",
+  "cryptography>=42",
+]
+
+[tool.uv]
+# Using uv to manage the environment and install deps from this file.
+# Run: `uv sync` to install and create/update uv.lock
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["miserableproject*", "apps*"]

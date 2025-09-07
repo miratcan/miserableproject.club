@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}miserableproject.club — Latest{% endblock %}
+{% block page_description %}Recently added failure post‑mortems from indie makers.{% endblock %}
+{% block content %}
+  <h1>Latest</h1>
+
+  {% include 'partials/tag_nav.html' %}
+
+  {% include 'partials/items_list.html' with items=submissions empty_text='No posts yet.' date_format='m/Y' %}
+{% endblock %}

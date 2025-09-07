@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}#{{ tag_name }} — miserableproject.club{% endblock %}
+{% block page_title %}#{{ tag_name }}{% endblock %}
+{% block page_description %}Posts tagged with #{{ tag_name }}{% endblock %}
+{% block canonical %}{{ request.scheme }}://{{ request.get_host }}{% url 'tag' tag_slug %}{% endblock %}
+{% block head_extra %}{% include 'partials/robots_noindex_if_paginated.html' %}{% endblock %}
+{% block content %}
+  <h1>#{{ tag_name }}</h1>
+
+  {% include 'partials/tag_nav.html' %}
+
+  {% include 'partials/items_list.html' with items=submissions empty_text='No posts under this tag.' date_format='m/Y' %}
+
+  {% comment %} Build prev/next URLs for pagination partial {% endcomment %}
+  {% if page_obj.has_previous %}
+    {% if page_obj.previous_page_number == 1 %}
+      {% url 'tag' tag_slug as prev_url %}
+    {% else %}
+      {% url 'tag_page' tag_slug page_obj.previous_page_number as prev_url %}
+    {% endif %}
+  {% endif %}
+  {% if page_obj.has_next %}
+    {% url 'tag_page' tag_slug page_obj.next_page_number as next_url %}
+  {% endif %}
+  {% include 'partials/pagination.html' %}
+{% endblock %}

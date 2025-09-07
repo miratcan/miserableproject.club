@@ -1,0 +1,8 @@
+{% if tag_items %}
+  <nav>
+    {% for t in tag_items %}
+      <a href="{% url 'tag' t.slug %}"{% if active_tag == t.slug %} class="active"{% endif %}>#{{ t.name }}</a>
+    {% endfor %}
+  </nav>
+{% endif %}
+

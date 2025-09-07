@@ -1,0 +1,11 @@
+<ul id="articles">
+  {% for s in submissions %}
+    <li>
+      <a href="{{ s.get_absolute_url }}">{{ s.title }}</a>
+      <small>{{ s.created_at|date:"m/Y" }}</small>
+    </li>
+  {% empty %}
+    <li>Henüz gönderi yok.</li>
+  {% endfor %}
+</ul>
+
