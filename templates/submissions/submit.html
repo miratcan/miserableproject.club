@@ -2,116 +2,90 @@
 {% block title %}Submit — miserableproject.club{% endblock %}
 {% block content %}
   <h1>Submit</h1>
-  <p>Markdown supported. H1/H2 in body will be stripped automatically.</p>
   <form method="post">
     {% csrf_token %}
     {{ form.non_field_errors }}
+
     <div class="field">
-      <label for="id_project_name">Project name</label>
+      {{ form.project_name.label_tag }}
+      {{ form.project_name.help_text }}
       {{ form.project_name }}
       {{ form.project_name.errors }}
-      {% if form.project_name.help_text %}<small class="help">{{ form.project_name.help_text }}</small>{% endif %}
     </div>
+
     <div class="field">
-      <label for="id_purpose">Purpose (280–320)</label>
-      {{ form.purpose }}
-      {{ form.purpose.errors }}
-      {% if form.purpose.help_text %}<small class="help">{{ form.purpose.help_text }}</small>{% endif %}
+      {{ form.tagline.label_tag }}
+      {{ form.tagline.help_text }}
+      {{ form.tagline }}
+      {{ form.tagline.errors }}
     </div>
+
     <div class="field">
-      <label>Where the idea came from?</label>
-      {{ form.idea_md }}
-      {{ form.idea_md.errors }}
-      {% if form.idea_md.help_text %}<small class="help">{{ form.idea_md.help_text }}</small>{% endif %}
+      {{ form.is_anonymous.label_tag }}
+      {{ form.is_anonymous.help_text }}
+      {{ form.is_anonymous }}
+      {{ form.is_anonymous.errors }}
     </div>
-    <div class="field">
-      <label>What was the tech & stack?</label>
-      {{ form.tech_md }}
-      {{ form.tech_md.errors }}
-      {% if form.tech_md.help_text %}<small class="help">{{ form.tech_md.help_text }}</small>{% endif %}
+
+    <div class="form-row two-cols">
+      <div class="field">
+        {{ form.birth_year.label_tag }}
+        {{ form.birth_year.help_text }}
+        {{ form.birth_year }}
+        {{ form.birth_year.errors }}
+      </div>
+      <div class="field">
+        {{ form.lifespan.label_tag }}
+        {{ form.lifespan.help_text }}
+        {{ form.lifespan }}
+        {{ form.lifespan.errors }}
+      </div>
     </div>
+
     <div class="field">
-      <label>How did you execute/launch?</label>
-      {{ form.execution_md }}
-      {{ form.execution_md.errors }}
-      {% if form.execution_md.help_text %}<small class="help">{{ form.execution_md.help_text }}</small>{% endif %}
-    </div>
-    <div class="field">
-      <label>Why did it fail? What went wrong?</label>
-      {{ form.failure_md }}
-      {{ form.failure_md.errors }}
-      {% if form.failure_md.help_text %}<small class="help">{{ form.failure_md.help_text }}</small>{% endif %}
-    </div>
-    <div class="field">
-      <label>Key lessons & advice</label>
-      {{ form.lessons_md }}
-      {{ form.lessons_md.errors }}
-      {% if form.lessons_md.help_text %}<small class="help">{{ form.lessons_md.help_text }}</small>{% endif %}
-    </div>
-    <div class="field">
-      <label>Links (one URL per line)</label>
+      {{ form.links.label_tag }}
+      {{ form.links.help_text }}
       {{ form.links }}
-      {% if form.links.help_text %}<small class="help">{{ form.links.help_text }}</small>{% endif %}
+      {{ form.links.errors }}
+    </div>
+
+    <div class="field">
+      {{ form.idea.label_tag }}
+      {{ form.idea.help_text }}
+      {{ form.idea }}
+      {{ form.idea.errors }}
     </div>
     <div class="field">
-      <label>Markets/Geo (comma‑separated)</label>
-      {{ form.markets }}
-      {% if form.markets.help_text %}<small class="help">{{ form.markets.help_text }}</small>{% endif %}
+      {{ form.tech.label_tag }}
+      {{ form.tech.help_text }}
+      {{ form.tech }}
+      {{ form.tech.errors }}
+    </div>
+    
+    <div class="field">
+      {{ form.wins.label_tag }}
+      {{ form.wins.help_text }}
+      {{ form.wins }}
+      {{ form.wins.errors }}
     </div>
     <div class="field">
-      <label>Stack tags (comma‑separated)</label>
-      {{ form.stack_tags }}
-      {% if form.stack_tags.help_text %}<small class="help">{{ form.stack_tags.help_text }}</small>{% endif %}
+      {{ form.failure.label_tag }}
+      {{ form.failure.help_text }}
+      {{ form.failure }}
+      {{ form.failure.errors }}
     </div>
-    <div class="field two-col">
-      <div>
-        <label>Timeline</label>
-        {{ form.timeline_text }}
-        {% if form.timeline_text.help_text %}<small class="help">{{ form.timeline_text.help_text }}</small>{% endif %}
-      </div>
-      <div>
-        <label>Revenue</label>
-        {{ form.revenue_text }}
-        {% if form.revenue_text.help_text %}<small class="help">{{ form.revenue_text.help_text }}</small>{% endif %}
-      </div>
-      <div>
-        <label>Spend</label>
-        {{ form.spend_text }}
-        {% if form.spend_text.help_text %}<small class="help">{{ form.spend_text.help_text }}</small>{% endif %}
-      </div>
+    <div class="field">
+      {{ form.lessons.label_tag }}
+      {{ form.lessons.help_text }}
+      {{ form.lessons }}
+      {{ form.lessons.errors }}
     </div>
+
     <div class="actions">
       <button type="submit" name="preview" value="1">Preview</button>
       <button type="submit">Publish</button>
     </div>
   </form>
 
-  {% if preview %}
-    <hr>
-    <h2>Preview</h2>
-    <article class="post">
-      <h1>{{ preview.project_name }}</h1>
-      <p class="purpose">{{ preview.purpose }}</p>
-      <section>
-        <h3>Where the idea came from?</h3>
-        <div class="md">{{ preview.idea|safe }}</div>
-      </section>
-      <section>
-        <h3>What was the tech & stack?</h3>
-        <div class="md">{{ preview.tech|safe }}</div>
-      </section>
-      <section>
-        <h3>How did you execute/launch?</h3>
-        <div class="md">{{ preview.execution|safe }}</div>
-      </section>
-      <section>
-        <h3>Why did it fail? What went wrong?</h3>
-        <div class="md">{{ preview.failure|safe }}</div>
-      </section>
-      <section>
-        <h3>Key lessons & advice</h3>
-        <div class="md">{{ preview.lessons|safe }}</div>
-      </section>
-    </article>
-  {% endif %}
+  {# Inline preview removed; preview is a dedicated page for drafts. #}
 {% endblock %}

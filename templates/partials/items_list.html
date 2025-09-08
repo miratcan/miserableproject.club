@@ -2,10 +2,16 @@
   {% for item in items %}
     <li>
       <a href="{{ item.get_absolute_url }}">{{ item.project_name }}</a>
-      {% if date_format %}
-        <small>{{ item.created_at|date:date_format }}</small>
-      {% else %}
-        <small>{{ item.created_at|date:"m/Y" }}</small>
+      {% if item.tagline %}
+        <br /><small>{{ item.tagline }}</small>
+      {% endif %}
+      {% if item.birth_year or item.lifespan or item.is_anonymous or item.user %}
+        <br /><small>
+          {% if item.birth_year %}Started: {{ item.birth_year }}{% endif %}
+          {% if item.lifespan %}{% if item.birth_year %} — {% endif %}Lifespan: {{ item.lifespan }} months{% endif %}
+          {% if item.is_anonymous %}{% if item.birth_year or item.lifespan %} · {% endif %}by Anonymous
+          {% elif item.user %}{% if item.birth_year or item.lifespan %} · {% endif %}by <a href="{% url 'user_profile' item.user.username %}">{{ item.user.username }}</a>{% endif %}
+        </small>
       {% endif %}
     </li>
   {% empty %}

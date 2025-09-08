@@ -139,12 +139,6 @@ h3 {
   color: var(--c14);
 }
 
-blockquote {
-  padding: 0 1em;
-  border-left: 2px solid #B2A497;
-  border-bottom: 2px solid #B2A497;
-}
-
 .youtube-video {
   aspect-ratio: 16 / 9;
   width: 100%;
@@ -152,7 +146,7 @@ blockquote {
 
 ul#articles li {
   list-style-type: square;
-  color: var(--c2);
+  color: var(--c7);
 }
 
 ul#articles {
@@ -178,14 +172,15 @@ a.tag {
 }
 
 main,
-header {
+header,
+footer {
   margin: 0 auto;
+  margin-bottom: var(--gap);
   box-sizing: border-box;
 }
 
 main {
-  margin: 1rem 0;
-  padding: 0 1rem;
+  padding: 0;
 }
 
 main a {
@@ -207,11 +202,12 @@ nav .wrapper {
 }
 
 main nav,
-table {
+table, blockquote {
   background: transparent;
   padding: 1rem;
   border: 4px double var(--c3);
   margin: 0 auto;
+  margin-bottom: var(--gap);
 }
 
 main nav a {
@@ -232,10 +228,35 @@ img {
   max-width: 80%;
 }
 
+/* Footer styles to mirror header */
+footer {
+  background: var(--c7);
+  padding: 0 1rem;
+}
+
+footer .wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0 1rem;
+  flex-wrap: wrap;
+}
+
+footer,
+footer p {
+  color: var(--c0);
+}
+
+footer a {
+  text-decoration: none;
+  color: var(--c0);
+}
+
 @media only screen and (max-width: 500px) {
 
   header,
-  main {
+  main,
+  footer {
     padding: 1em;
   }
 
@@ -248,3 +269,103 @@ main> :first-child {
   margin-top: 0;
 }
 
+label {
+  display: block;
+  color: var(--c14)
+}
+
+input, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: var(--c15);
+  background: var(--c1);
+  border: none;
+  padding: var(--gap);
+  margin-bottom: 0;
+  box-sizing: border-box;
+  width: 100%;
+}
+.screen input:focus,
+.screen textarea:focus,
+.screen select:focus,
+.screen button:focus {
+  outline: none;
+  box-shadow: none;
+  border: none;
+}
+
+/* Remove default focus glow from links and buttons across browsers */
+.screen a:focus,
+.screen button:focus {
+  outline: none;
+  box-shadow: none;
+}
+/* Firefox inner focus ring removal */
+.screen button::-moz-focus-inner { border: 0; }
+
+/* DOS-style focus highlight for fields: simple inversion */
+/* Hide native caret so we can draw a DOS block caret */
+.screen input:focus,
+.screen textarea:focus {
+  caret-color: transparent;
+}
+
+/* DOS-style block caret overlay */
+.screen .dos-caret {
+  position: absolute;
+  width: 0.6em; /* approx char width in DOS font */
+  height: 1.2em; /* approx line height */
+  background: var(--c14);
+  pointer-events: none;
+  animation: dos-blink 1s steps(1, end) infinite;
+  z-index: 10;
+}
+
+@keyframes dos-blink {
+  50% { opacity: 0; }
+}
+.help-text {
+  color: var(--c8);
+}
+.field {
+  margin-bottom: var(--gap);
+}
+
+.form-row.two-cols {
+  display: flex;
+  gap: 1rem;
+}
+.form-row.two-cols .field {
+  flex: 1 1 0;
+}
+
+/* DOS-style buttons */
+.screen button,
+.screen input[type="submit"],
+.screen input[type="button"],
+.screen .btn {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: var(--c0);
+  background: var(--c2);
+  border: none;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+}
+.screen button:hover,
+.screen input[type="submit"]:hover,
+.screen input[type="button"]:hover,
+.screen .btn:hover {
+  background: var(--c1);
+}
+blockquote p:last-child {
+  margin-bottom: 0;
+}
+.purpose, .meta {
+  color: var(--c9);
+  text-align: center;
+  margin-top: -0.5rem;
+  margin-bottom: 1.5rem;
+}

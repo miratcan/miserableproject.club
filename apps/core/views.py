@@ -1,4 +1,7 @@
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
+from django.contrib.auth import get_user_model
+from django.http import Http404
+from django.urls import reverse
 from apps.submissions.models import Submission
 from .utils import get_tag_items
 
@@ -52,7 +55,60 @@ class TagView(TemplateView):
         return ctx
 
 
-    
+class UserProfileView(TemplateView):
+    template_name = 'core/profile.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        username = kwargs.get('username')
+        User = get_user_model()
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise Http404("User not found")
+
+        # Respect anonymity: do not list anonymous posts on profile
+        from apps.submissions.models import Submission
+        published_qs = (
+            Submission.objects
+            .filter(status='published', user=user, is_anonymous=False)
+            .order_by('-created_at')
+        )
+
+        # Pagination for published items
+        from django.core.paginator import Paginator
+        page = int(self.request.GET.get('page') or 1)
+        paginator = Paginator(published_qs, 20)
+        page_obj = paginator.get_page(page)
+
+        # If owner viewing their own profile, also include drafts (not paginated)
+        draft_items = None
+        if self.request.user.is_authenticated and self.request.user == user:
+            draft_qs = (
+                Submission.objects
+                .filter(status='draft', user=user)
+                .order_by('-updated_at')
+            )
+            dpage = int(self.request.GET.get('dpage') or 1)
+            draft_paginator = Paginator(draft_qs, 20)
+            draft_page_obj = draft_paginator.get_page(dpage)
+            draft_items = draft_page_obj.object_list
+
+        ctx['profile_user'] = user
+        ctx['submissions'] = page_obj.object_list
+        ctx['paginator'] = paginator
+        ctx['page_obj'] = page_obj
+        if draft_items is not None:
+            ctx['draft_submissions'] = draft_items
+            ctx['draft_paginator'] = draft_paginator
+            ctx['draft_page_obj'] = draft_page_obj
+        return ctx
 
 
-    
+class MyProfileRedirectView(RedirectView):
+    permanent = False
+
+    def get_redirect_url(self, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return reverse('account_login')
+        return reverse('user_profile', args=[self.request.user.username])

@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
-from django.views.generic import DetailView, FormView
+from django.views.generic import DetailView, FormView, View
 
 from django.contrib.syndication.views import Feed
 from django.urls import reverse
@@ -18,17 +18,17 @@ class SubmissionDetailView(DetailView):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.exclude(status='removed')
+        return qs.filter(status='published')
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         s = self.object
         ctx['html'] = {
-            'idea': render_markdown(s.idea_md),
-            'tech': render_markdown(s.tech_md),
-            'execution': render_markdown(s.execution_md),
-            'failure': render_markdown(s.failure_md),
-            'lessons': render_markdown(s.lessons_md),
+            'idea': render_markdown(s.idea),
+            'tech': render_markdown(s.tech),
+            'wins': render_markdown(s.wins),
+            'failure': render_markdown(s.failure),
+            'lessons': render_markdown(s.lessons),
         }
         return ctx
 
@@ -37,31 +37,38 @@ class SubmitView(LoginRequiredMixin, FormView):
     template_name = 'submissions/submit.html'
     form_class = SubmissionForm
 
+    def dispatch(self, request, *args, **kwargs):
+        self.instance = None
+        slug = kwargs.get('slug')
+        if slug:
+            try:
+                self.instance = Submission.objects.get(slug=slug, user=request.user, status='draft')
+            except Submission.DoesNotExist:
+                return redirect('submit')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        if self.instance:
+            kwargs['instance'] = self.instance
+        return kwargs
+
     def form_valid(self, form):
         if 'preview' in self.request.POST:
-            # just render preview
-            ctx = self.get_context_data(form=form)
-            data = form.cleaned_data
-            ctx['preview'] = {
-                'project_name': data['project_name'],
-                'purpose': data['purpose'],
-                'idea': render_markdown(data['idea_md']),
-                'tech': render_markdown(data['tech_md']),
-                'execution': render_markdown(data['execution_md']),
-                'failure': render_markdown(data['failure_md']),
-                'lessons': render_markdown(data['lessons_md']),
-                'links': data.get('links_json', []),
-                'markets': data.get('markets_json', []),
-                'stacks': data.get('stack_tags', []),
-            }
-            return self.render_to_response(ctx)
+            # save as draft and redirect to preview page
+            s = form.save(commit=False)
+            s.user = self.request.user
+            s.links_json = form.cleaned_data.get('links_json', [])
+            s.status = 'draft'
+            s.save()
+            form.save_m2m()
+            return redirect('submission_preview', slug=s.slug)
 
         # publish
         s = form.save(commit=False)
         s.user = self.request.user
         # attach parsed json fields
         s.links_json = form.cleaned_data.get('links_json', [])
-        s.markets_json = form.cleaned_data.get('markets_json', [])
         s.status = 'published'
         s.save()
         form.save_m2m()
@@ -80,7 +87,42 @@ class LatestFeed(Feed):
         return item.project_name
 
     def item_description(self, item: Submission):
-        return item.purpose
+        return item.tagline
 
     def item_link(self, item: Submission):
         return reverse('submission_detail', args=[item.slug])
+
+
+class DraftPreviewView(LoginRequiredMixin, DetailView):
+    model = Submission
+    template_name = 'submissions/detail.html'
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(status='draft', user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        s = self.object
+        ctx['html'] = {
+            'idea': render_markdown(s.idea),
+            'tech': render_markdown(s.tech),
+            'wins': render_markdown(s.wins),
+            'failure': render_markdown(s.failure),
+            'lessons': render_markdown(s.lessons),
+        }
+        ctx['is_preview'] = True
+        return ctx
+
+
+class PublishDraftView(LoginRequiredMixin, View):
+    def post(self, request, slug):
+        try:
+            s = Submission.objects.get(slug=slug, user=request.user, status='draft')
+        except Submission.DoesNotExist:
+            return redirect('submission_detail', slug=slug)
+        s.status = 'published'
+        s.save(update_fields=['status'])
+        return redirect(s.get_absolute_url())

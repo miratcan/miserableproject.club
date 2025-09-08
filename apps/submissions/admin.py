@@ -1,12 +1,12 @@
 from django.contrib import admin
-from .models import Submission, Report
+from .models import Submission
 
 
 @admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):
     list_display = ('project_name', 'status', 'created_at')
     list_filter = ('status', 'created_at')
-    search_fields = ('project_name', 'purpose')
+    search_fields = ('project_name', 'tagline')
     actions = ['mark_published', 'mark_removed', 'mark_flagged']
 
     @admin.action(description='Mark selected as published')
@@ -22,14 +22,4 @@ class SubmissionAdmin(admin.ModelAdmin):
         queryset.update(status='flagged')
 
 
-@admin.register(Report)
-class ReportAdmin(admin.ModelAdmin):
-    list_display = ('id', 'target_type', 'target_id', 'status', 'created_at')
-    list_filter = ('status', 'target_type', 'created_at')
-    search_fields = ('reason',)
-    actions = ['close_reports']
-
-    @admin.action(description='Close selected reports')
-    def close_reports(self, request, queryset):
-        queryset.update(status='closed')
-
+# Report removed for MVP

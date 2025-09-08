@@ -5,9 +5,12 @@ from django.urls import reverse
 import secrets
 import string
 from taggit.managers import TaggableManager
+from datetime import date
+from django.core.validators import MinValueValidator
 
 
 STATUS_CHOICES = (
+    ('draft', 'Draft'),
     ('published', 'Published'),
     ('flagged', 'Flagged'),
     ('removed', 'Removed'),
@@ -32,24 +35,30 @@ def strip_h1_h2(md: str) -> str:
     return '\n'.join(lines)
 
 
+def current_year() -> int:
+    return date.today().year
+
+
 class Submission(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     project_name = models.CharField(max_length=120)
     slug = models.SlugField(max_length=200, unique=True, db_index=True)
-    purpose = models.CharField(max_length=320)
+    tagline = models.CharField(max_length=160)
+    is_anonymous = models.BooleanField(default=False)
+    birth_year = models.IntegerField(default=current_year, validators=[MinValueValidator(1995)])
+    lifespan = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(1)])
 
-    idea_md = models.TextField()
-    tech_md = models.TextField()
-    execution_md = models.TextField()
-    failure_md = models.TextField()
-    lessons_md = models.TextField()
+    idea = models.TextField()
+    tech = models.TextField()
+    failure = models.TextField()
+    lessons = models.TextField()
+    wins = models.TextField(blank=True, default="")
 
     links_json = models.JSONField(default=list, blank=True)
-    markets_json = models.JSONField(default=list, blank=True)
     stack_tags = TaggableManager(blank=True)
-    timeline_text = models.CharField(max_length=120, blank=True)
-    revenue_text = models.CharField(max_length=120, blank=True)
-    spend_text = models.CharField(max_length=120, blank=True)
+    # timeline_text removed for MVP
+    # revenue_text removed for MVP
+    # spend_text removed for MVP
 
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='published', db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -66,11 +75,10 @@ class Submission(models.Model):
 
     def save(self, *args, **kwargs):
         # enforce strip of H1/H2
-        self.idea_md = strip_h1_h2(self.idea_md)
-        self.tech_md = strip_h1_h2(self.tech_md)
-        self.execution_md = strip_h1_h2(self.execution_md)
-        self.failure_md = strip_h1_h2(self.failure_md)
-        self.lessons_md = strip_h1_h2(self.lessons_md)
+        self.idea = strip_h1_h2(self.idea)
+        self.tech = strip_h1_h2(self.tech)
+        self.failure = strip_h1_h2(self.failure)
+        self.lessons = strip_h1_h2(self.lessons)
 
         if not self.slug:
             base = slugify(self.project_name)[:64] or 'post'
@@ -86,25 +94,4 @@ class Submission(models.Model):
         super().save(*args, **kwargs)
 
 
-class Report(models.Model):
-    TARGET_CHOICES = (
-        ('submission', 'Submission'),
-    )
-    STATUS_CHOICES = (
-        ('open', 'Open'),
-        ('closed', 'Closed'),
-    )
-
-    target_type = models.CharField(max_length=20, choices=TARGET_CHOICES)
-    target_id = models.PositiveBigIntegerField()
-    reporter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
-    reason = models.TextField()
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='open', db_index=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ['-created_at']
-
-    def __str__(self):
-        return f"Report #{self.pk} {self.target_type}:{self.target_id}"
-
+# Report model removed for MVP

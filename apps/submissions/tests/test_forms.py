@@ -6,27 +6,33 @@ sys.path.append(str(Path(__file__).resolve().parents[3]))
 from django.test import TestCase
 
 from apps.submissions.forms import SubmissionForm
+from datetime import date
 
 
 class SubmissionFormTests(TestCase):
     def _valid_data(self, **overrides):
         data = {
             "project_name": "Test Project",
-            "purpose": "s" * 280,
-            "idea_md": "idea",
-            "tech_md": "tech",
-            "execution_md": "exec",
-            "failure_md": "fail",
-            "lessons_md": "lessons",
+            "tagline": "Short one line",
+            "birth_year": date.today().year,
+            "idea": "idea",
+            "tech": "tech",
+            "failure": "fail",
+            "lessons": "lessons",
         }
         data.update(overrides)
         return data
 
-    def test_purpose_length_validation(self):
-        data = self._valid_data(purpose="a" * 279)
+    def test_tagline_length_and_single_line_validation(self):
+        data = self._valid_data(tagline="a" * 161)
         form = SubmissionForm(data)
         self.assertFalse(form.is_valid())
-        self.assertIn("purpose", form.errors)
+        self.assertIn("tagline", form.errors)
+
+        data = self._valid_data(tagline="line1\nline2")
+        form = SubmissionForm(data)
+        self.assertFalse(form.is_valid())
+        self.assertIn("tagline", form.errors)
 
     def test_links_parsed_into_json(self):
         links_text = "http://example.com\n\nhttps://foo.com"

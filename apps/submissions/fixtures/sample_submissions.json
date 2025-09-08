@@ -4,20 +4,21 @@
     "pk": 1,
     "fields": {
       "user": null,
-      "project_name": "Earning $10K with 161 Lines of JavaScript",
-      "slug": "earning-10k-with-161-lines-of-javascript",
-      "purpose": "A tiny script that automated a boring task, accidentally turned into a $10K side project.",
-      "idea_md": "I was repeating the same data cleanup every week. I automated it for myself, then realized others had the exact same pain.",
-      "tech_md": "Vanilla JS + Node CLI. Stripe for payments. No database — kept it stateless.",
-      "execution_md": "Launched on Twitter with a short demo GIF. Took feedback and added only essentials.",
-      "failure_md": "Support requests grew, but the TAM was tiny. Growth stalled after the initial audience was saturated.",
-      "lessons_md": "Solve recurring pains. Keep scope brutally small. Distribution > features.",
-      "links_json": ["https://example.com/demo", "https://example.com/landing"],
-      "markets_json": ["US", "EU"],
-      "stack_tags": ["javascript", "saas", "stripe"],
-      "timeline_text": "3 months",
-      "revenue_text": "$10k",
-      "spend_text": "$200",
+      "project_name": "Kaydet — Terminal Notes",
+      "slug": "kaydet-terminal-notes",
+      "tagline": "Save timestamped notes from your terminal and search them later.",
+      "is_anonymous": false,
+      "birth_year": 2024,
+      "lifespan": 1,
+      "idea": "I kept losing scratch notes from ad‑hoc terminal sessions. I wanted a single command to append a timestamped note to a searchable log.\n\nI built Kaydet for myself, then realized a few colleagues had the same itch.",
+      "tech": "Python CLI with Click. App writes newline‑delimited JSON to a local file; optional sync to S3. Full‑text search via SQLite FTS5. Packaged for macOS/Linux via pipx.\n\nChose a file‑first approach to keep it portable and avoid servers.",
+      
+      "failure": "- Distribution: Developers liked the idea but the audience was too small to sustain growth.\n- Product gap: People wanted mobile capture and cross‑platform search. Building sync and conflict resolution ballooned scope.\n- Competition: Obsidian/Notion were “good enough” with hotkeys and plugins.\n\nRevenue never covered the time to build sync safely.",
+      "lessons": "- Start with the distribution channel, not features.\n- If sync is on the horizon, either commit fully or avoid it entirely.\n- A delightful CLI is not enough if the user’s capture surface is multi‑device.",
+      "links_json": ["https://example.com/kaydet"],
+      "stack_tags": [],
+      
+      
       "status": "published",
       "created_at": "2024-09-15T10:00:00Z",
       "updated_at": "2024-09-15T10:00:00Z"
@@ -28,20 +29,21 @@
     "pk": 2,
     "fields": {
       "user": null,
-      "project_name": "Terminal Journal: Writing from the shell",
-      "slug": "terminal-journal-writing-from-the-shell",
-      "purpose": "A CLI journaling tool that felt great for me, but never found broad adoption.",
-      "idea_md": "I journal daily and live in the terminal. A CLI felt natural.",
-      "tech_md": "Python, Click, simple file storage. Packaged with PyPI.",
-      "execution_md": "Open-sourced on GitHub, tweeted a demo, wrote docs.",
-      "failure_md": "Most people prefer mobile or web. Terminal-only UX limited reach.",
-      "lessons_md": "Audience-channel fit matters. Meet users where they are.",
-      "links_json": ["https://github.com/example/terminal-journal"],
-      "markets_json": ["Developers"],
-      "stack_tags": ["python", "cli", "open-source"],
-      "timeline_text": "6 weeks",
-      "revenue_text": "$0",
-      "spend_text": "$0",
+      "project_name": "Flipa.live",
+      "slug": "flipa-live",
+      "tagline": "A blockchain dice game using Chainlink VRF for fairness.",
+      "is_anonymous": false,
+      "birth_year": 2024,
+      "lifespan": 2,
+      "idea": "Crypto casinos felt shady. I wanted a simple game with verifiable randomness using Chainlink VRF, transparent odds, and no hidden edges.",
+      "tech": "Solidity smart contract on Polygon. Chainlink VRF for randomness. Minimal Next.js frontend and WalletConnect. The house edge and bankroll managed by a single owner wallet.",
+      
+      "failure": "- Regulation: Even a harmless dice game raised legal questions in multiple regions.\n- Trust: Users still preferred known brands; self‑hosted bankroll felt risky.\n- Unit economics: Gas spikes killed micro‑bets. The more we subsidized fees, the higher the variance on a tiny bankroll.\n\nWe shut it down before exposure grew beyond our risk tolerance.",
+      "lessons": "- “Provably fair” does not replace brand trust and compliance.\n- On‑chain UX is fragile to gas price volatility.\n- If regulation is a maybe, it’s a no for a tiny team.",
+      "links_json": ["https://example.com/flipa"],
+      "stack_tags": [],
+      
+      
       "status": "published",
       "created_at": "2024-08-10T08:30:00Z",
       "updated_at": "2024-08-10T08:30:00Z"
@@ -52,24 +54,72 @@
     "pk": 3,
     "fields": {
       "user": null,
-      "project_name": "Feature-packed, userless",
-      "slug": "feature-packed-userless",
-      "purpose": "We built a beautiful product with every feature users asked for — and still no one came.",
-      "idea_md": "We interviewed a handful of users and turned every wish into a roadmap.",
-      "tech_md": "Django backend, React frontend, Postgres, Celery for async jobs.",
-      "execution_md": "Shipped weekly. Polished UI. Wrote long changelogs. Waited for signups.",
-      "failure_md": "No clear distribution channel. Messaging was vague. ICP undefined.",
-      "lessons_md": "Define ICP early. Own a distribution channel. Cut scope.",
-      "links_json": ["https://example.com"],
-      "markets_json": ["SMBs"],
-      "stack_tags": ["django", "react", "product-market-fit"],
-      "timeline_text": "4 months",
-      "revenue_text": "$0",
-      "spend_text": "$800",
+      "project_name": "Inbox Zero AI",
+      "slug": "inbox-zero-ai",
+      "tagline": "An AI inbox triage plugin for Gmail that never cleared the runway.",
+      "is_anonymous": true,
+      "birth_year": 2023,
+      "idea": "I wanted an AI assistant that labels newsletters, snoozes low‑value threads, and escalates critical ones. The goal: finish daily email in under 10 minutes.",
+      "tech": "Gmail API + Pub/Sub push notifications. A small Django service handled OAuth, stored minimal metadata, and called an LLM for routing. No email bodies persisted; everything was ephemeral.",
+      
+      "failure": "- API quotas and review cycles slowed iteration to a crawl.\n- Privacy concerns: Even with no body storage, users hesitated to grant full mailbox scopes.\n- Value signal: People liked the idea but didn’t pay once free trials ended. Email pain is high, willingness to pay was low.",
+      "lessons": "- Trust and compliance work overshadowed product work.\n- Shaving seconds off routine tasks is not always a strong buying trigger.\n- Building on third‑party APIs means living with their pace.",
+      "links_json": ["https://example.com/inboxzero"],
+      "stack_tags": [],
+      
+      
       "status": "published",
       "created_at": "2024-07-01T12:00:00Z",
       "updated_at": "2024-07-01T12:00:00Z"
     }
+  },
+  {
+    "model": "submissions.submission",
+    "pk": 4,
+    "fields": {
+      "user": null,
+      "project_name": "MealRoute",
+      "slug": "mealroute",
+      "tagline": "Local kitchens + delivery time slots, without building a courier fleet.",
+      "is_anonymous": false,
+      "birth_year": 2022,
+      "lifespan": 5,
+      "idea": "We wanted to connect home‑style kitchens to office workers with predictable time slots and pre‑orders. Reduce waste for cooks, cheaper lunch for customers.",
+      "tech": "Django + HTMX for a lightweight ops dashboard. Drivers onboarded via a simple app. Route batching with OR‑Tools. Payments via Stripe Connect.",
+      
+      "failure": "- Cold start: We had to recruit both kitchens and customers at the same time.\n- Perishable ops: One missed batch ruined the day’s trust.\n- Margins: After refunds, driver bonuses, and packaging, there was nothing left.\n\nWhen one driver quit mid‑route, we spent the evening delivering meals ourselves.",
+      "lessons": "- Logistics businesses need local redundancy from day one.\n- Batching + perishables + peak windows leave razor‑thin margin for error.\n- If your “MVP” requires heroics, it’s not minimal.",
+      "links_json": ["https://example.com/mealroute"],
+      "stack_tags": [],
+      
+      
+      "status": "published",
+      "created_at": "2024-06-12T09:00:00Z",
+      "updated_at": "2024-06-12T09:00:00Z"
+    }
+  },
+  {
+    "model": "submissions.submission",
+    "pk": 5,
+    "fields": {
+      "user": null,
+      "project_name": "10‑Minute Landing Pages",
+      "slug": "10-minute-landing-pages",
+      "tagline": "Spin up a fast, clean landing page with copy prompts in minutes.",
+      "is_anonymous": false,
+      "birth_year": 2021,
+      "idea": "Founders over‑tune landing pages. We wanted sensible defaults, opinionated sections, and prompts to write compelling copy in English without overthinking.",
+      "tech": "Next.js static export. Prebuilt sections with tailwind. AI prompts for copy suggestions. One‑click deploy to Cloudflare Pages.",
+      
+      "failure": "- Competition: So many site builders with better ecosystems and integrations.\n- Retention: After launch, users churned because they rarely needed a second site.\n- Willingness to pay: The moment people needed extras (forms, auth), they switched to a bigger tool.",
+      "lessons": "- Go where a platform lock‑in is a feature, not a bug.\n- One‑time creation tools need a strong upsell path or consulting component.\n- Copy prompts alone don’t create durable value.",
+      "links_json": ["https://example.com/10minlp"],
+      "stack_tags": [],
+      
+      
+      "status": "published",
+      "created_at": "2024-05-03T07:45:00Z",
+      "updated_at": "2024-05-03T07:45:00Z"
+    }
   }
 ]
-

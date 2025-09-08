@@ -15,7 +15,5 @@ urlpatterns = [
     path('dos.ttf', RedirectView.as_view(url='/static/fonts/dos.ttf', permanent=True)),
     path('', include('apps.core.urls')),
     path('', include('apps.submissions.urls')),
-    path('', include('apps.moderation.urls')),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='sitemap'),
 ]
-

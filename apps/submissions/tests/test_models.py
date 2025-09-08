@@ -20,12 +20,11 @@ class SubmissionSlugTests(TestCase):
     def _create_submission(self, project_name="My Project"):
         return Submission.objects.create(
             project_name=project_name,
-            purpose="s" * 280,
-            idea_md="idea",
-            tech_md="tech",
-            execution_md="exec",
-            failure_md="fail",
-            lessons_md="lessons",
+            tagline="t" * 80,
+            idea="idea",
+            tech="tech",
+            failure="fail",
+            lessons="lessons",
         )
 
     @patch("apps.submissions.models._short_id", return_value="abc123")

@@ -5,10 +5,10 @@ Minimal publishing platform for indie/solo founders’ failure post‑mortems in
 ## Features (MVP)
 - OAuth via Reddit/Google (django‑allauth)
   - Only third‑party logins are allowed (no local/password accounts, no verification emails).
-- Submit form (Markdown, strips H1/H2 in body, links nofollow)
+- Submit form (Markdown supported except H1/H2 headers; links nofollow)
 - Home: Latest posts
-- Post detail: 4 main sections + meta/OG
-- Report flow and simple admin actions
+- Post detail: tagline + 4 main sections + meta/OG
+- (Reports removed for MVP)
 - Sitemap.xml and RSS (latest 50)
 - Static files via WhiteNoise; SQLite
 
@@ -89,12 +89,12 @@ just collectstatic             # collect static to STATIC_ROOT
 
 ## Data Model
 - `Submission` — content and meta fields
-- `Report` — target, reason, status (open/closed)
+- (Removed) `Report`
 
 ## Acceptance Criteria (mapping)
-- H1/H2 stripped on save: `apps/submissions/models.py:strip_h1_h2` and form `clean()`
+- H1/H2 stripped on save (Markdown supported except H1/H2 headers): `apps/submissions/models.py:strip_h1_h2` and form `clean()`
 - Submit requires login: `SubmitView(LoginRequiredMixin)`
-- Report admin: `apps/submissions/admin.py`
+- (Removed) Report admin
 - Canonical + OG: `templates/submissions/detail.html`
 - RSS: `/rss.xml`; Sitemap: `/sitemap.xml`
 - Form errors: Django form errors are rendered

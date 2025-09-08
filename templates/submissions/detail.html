@@ -1,14 +1,50 @@
 {% extends 'base.html' %}
 {% block title %}{{ object.project_name }} — miserableproject.club{% endblock %}
 {% block page_title %}{{ object.project_name }}{% endblock %}
-{% block page_description %}{{ object.purpose }}{% endblock %}
-{% block meta_description %}{{ object.purpose }}{% endblock %}
+{% block page_description %}{{ object.tagline }}{% endblock %}
+{% block meta_description %}{{ object.tagline }}{% endblock %}
 {% block canonical %}{{ request.scheme }}://{{ request.get_host }}{{ object.get_absolute_url }}{% endblock %}
 {% block content %}
   <article class="post">
+    {% if is_preview %}
+      <div class="notice" style="border: 4px double var(--c6); padding: 1rem; margin-bottom: var(--gap); color: var(--c15);">
+        Draft preview — only you can see this.
+        <a class="btn" href="{% url 'submit_edit' slug=object.slug %}" style="margin-left: 1rem;">Back to edit</a>
+        <form method="post" action="{{ object.get_absolute_url }}publish/" style="display:inline; margin-left: 1rem;">
+          {% csrf_token %}
+          <button type="submit">Publish</button>
+        </form>
+      </div>
+    {% endif %}
     <h1>{{ object.project_name }}</h1>
-    <p class="purpose">{{ object.purpose }}</p>
+    <p class="purpose">{{ object.tagline }}</p>
+    <p class="meta">
+      Relased: {{ object.birth_year }}
+      {% if object.lifespan %} - Lived for: {{ object.lifespan }} months{% endif %}
+      {% if object.is_anonymous %} - Created by Anonymous{% elif object.user %} - Created by {{ object.user.username }}{% endif %}
+    </p>
 
+    <section>
+      <h2>Where the idea came from?</h2>
+      <div class="md">{{ html.idea|safe }}</div>
+    </section>
+    <section>
+      <h2>What was the tech & stack?</h2>
+      <div class="md">{{ html.tech|safe }}</div>
+    </section>
+    
+    <section>
+      <h2>What went right?</h2>
+      <div class="md">{{ html.wins|safe }}</div>
+    </section>
+    <section>
+      <h2>Why did it fail? What went wrong?</h2>
+      <div class="md">{{ html.failure|safe }}</div>
+    </section>
+    <section>
+      <h2>Key lessons & advice</h2>
+      <div class="md">{{ html.lessons|safe }}</div>
+    </section>
     {% if object.links_json %}
       <p class="links">
         {% for url in object.links_json %}
@@ -17,34 +53,7 @@
       </p>
     {% endif %}
 
-    <section>
-      <h3>Where the idea came from?</h3>
-      <div class="md">{{ html.idea|safe }}</div>
-    </section>
-    <section>
-      <h3>What was the tech & stack?</h3>
-      <div class="md">{{ html.tech|safe }}</div>
-    </section>
-    <section>
-      <h3>How did you execute/launch?</h3>
-      <div class="md">{{ html.execution|safe }}</div>
-    </section>
-    <section>
-      <h3>Why did it fail? What went wrong?</h3>
-      <div class="md">{{ html.failure|safe }}</div>
-    </section>
-    <section>
-      <h3>Key lessons & advice</h3>
-      <div class="md">{{ html.lessons|safe }}</div>
-    </section>
 
-    <form method="post" action="/report/" class="report-form">
-      {% csrf_token %}
-      <input type="hidden" name="target_type" value="submission">
-      <input type="hidden" name="target_id" value="{{ object.id }}">
-      <label for="reason">Report reason</label>
-      <input type="text" id="reason" name="reason" required>
-      <button type="submit">Report</button>
-    </form>
+    {# Reports removed for MVP #}
   </article>
 {% endblock %}
