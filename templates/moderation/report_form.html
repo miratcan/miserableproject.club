@@ -5,6 +5,8 @@
 <form method="post">
   {% csrf_token %}
   {{ form.as_p }}
-  <button type="submit">Submit</button>
+  <div class="actions">
+    <button type="submit">Submit</button>
+  </div>
 </form>
 {% endblock %}

@@ -9,41 +9,13 @@
   {% if paginator and page_obj and paginator.num_pages > 1 %}
     <nav class="pagination">
       {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}{% if draft_page_obj %}&dpage={{ draft_page_obj.number }}{% endif %}">Previous</a>
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
       {% endif %}
       <span>Page {{ page_obj.number }} of {{ paginator.num_pages }}</span>
       {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}{% if draft_page_obj %}&dpage={{ draft_page_obj.number }}{% endif %}">Next</a>
+        <a href="?page={{ page_obj.next_page_number }}">Next</a>
       {% endif %}
     </nav>
   {% endif %}
-
-  {% if draft_submissions %}
-    <h2>Your Drafts</h2>
-    <ul id="drafts">
-      {% for item in draft_submissions %}
-        <li>
-          <a href="{% url 'submission_preview' slug=item.slug %}">{{ item.project_name }}</a>
-          {% if item.tagline %}
-            <br /><small>{{ item.tagline }}</small>
-          {% endif %}
-          <br /><small>Last updated: {{ item.updated_at|date:'Y-m-d H:i' }}</small>
-        </li>
-      {% empty %}
-        <li>No drafts.</li>
-      {% endfor %}
-    </ul>
-
-    {% if draft_paginator and draft_page_obj and draft_paginator.num_pages > 1 %}
-      <nav class="pagination">
-        {% if draft_page_obj.has_previous %}
-          <a href="?dpage={{ draft_page_obj.previous_page_number }}{% if page_obj %}&page={{ page_obj.number }}{% endif %}">Previous</a>
-        {% endif %}
-        <span>Page {{ draft_page_obj.number }} of {{ draft_paginator.num_pages }}</span>
-        {% if draft_page_obj.has_next %}
-          <a href="?dpage={{ draft_page_obj.next_page_number }}{% if page_obj %}&page={{ page_obj.number }}{% endif %}">Next</a>
-        {% endif %}
-      </nav>
-    {% endif %}
-  {% endif %}
+  
 {% endblock %}

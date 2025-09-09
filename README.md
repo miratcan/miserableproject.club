@@ -1,10 +1,9 @@
-# miserableproject.club (MVP)
+# miserableprojects.directory (MVP)
 
-Minimal publishing platform for indie/solo founders’ failure post‑mortems in a single, consistent format.
+Minimal publishing platform for indie/solo founders' failure post-mortems in a single, consistent format.
 
 ## Features (MVP)
-- OAuth via Reddit/Google (django‑allauth)
-  - Only third‑party logins are allowed (no local/password accounts, no verification emails).
+- Built-in email/password auth (no third-party providers)
 - Submit form (Markdown supported except H1/H2 headers; links nofollow)
 - Home: Latest posts
 - Post detail: tagline + 4 main sections + meta/OG
@@ -39,6 +38,18 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
+Environment variables
+---------------------
+Copy `.env.example` to `.env` and adjust values. Key vars:
+
+- `DJANGO_DEBUG` — 1 for dev, 0 for prod
+- `DJANGO_SECRET_KEY` — required in production
+- `DJANGO_ALLOWED_HOSTS` — comma-separated list
+- `DEFAULT_FROM_EMAIL` — default sender
+- `USE_ANYMAIL` and `ANYMAIL_BACKEND` — optional email backend
+- `MAILGUN_*` — if using Mailgun
+- `ADMIN_URL` — Django admin URL path (default `admin/`); set to a non-obvious value in production.
+
 ## Developer Commands (just)
 For convenience, a Justfile provides shortcuts for common tasks.
 
@@ -71,21 +82,18 @@ just test                      # run Django tests (verbosity 2)
 
 # users and data
 just superuser                 # create admin user
-just loaddata                  # load sample submissions fixture
+just loaddata                  # load internetguzeldir.com fixture
 
 # static files (prod)
 just collectstatic             # collect static to STATIC_ROOT
 ```
 
-3) Environment variables
-- `DJANGO_SECRET_KEY` — required in production
-- `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
-- `REDDIT_CLIENT_ID`, `REDDIT_CLIENT_SECRET`
-- `DEFAULT_OG_IMAGE` — optional (defaults to placeholder). You can also set `MISERABLEPROJECT_DEFAULT_OG_IMAGE`.
-
-4) Allauth provider setup
-- Admin > Sites (`SITE_ID=1`): set your domain
-- Admin > Social applications: create Reddit/Google apps and attach to site
+Auth routes
+-----------
+- Login: `/accounts/login/`
+- Logout: `/accounts/logout/`
+- Signup: `/accounts/signup/`
+- Password reset: `/accounts/password_reset/`
 
 ## Data Model
 - `Submission` — content and meta fields

@@ -10,7 +10,6 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
   "Django>=4.2,<5.0",
-  "django-allauth>=0.63",
   "whitenoise>=6.6",
   "markdown>=3.6",
   "bleach>=6.1",
@@ -19,6 +18,8 @@ dependencies = [
   "PyJWT>=2.8",
   "cryptography>=42",
   "django-taggit>=6.1.0",
+  "django-anymail>=10.3",
+  "django-environ>=0.11",
 ]
 
 [tool.uv]

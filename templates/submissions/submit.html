@@ -1,11 +1,20 @@
 {% extends 'base.html' %}
-{% block title %}Submit — miserableproject.club{% endblock %}
+{% block title %}Submit — miserableprojects.directory{% endblock %}
 {% block content %}
-  <h1>Submit</h1>
+  <h1>Submit Your Miserable Project</h1>
   <form method="post">
     {% csrf_token %}
     {{ form.non_field_errors }}
+    {{ form.honeypot }}
+    <div class="field">
+      {{ form.is_anonymous.label_tag }}
+      {{ form.is_anonymous.help_text }}
+      {{ form.is_anonymous }}
+      {{ form.is_anonymous.errors }}
+    </div>
 
+
+    <div class="form-row two-cols">
     <div class="field">
       {{ form.project_name.label_tag }}
       {{ form.project_name.help_text }}
@@ -19,12 +28,6 @@
       {{ form.tagline }}
       {{ form.tagline.errors }}
     </div>
-
-    <div class="field">
-      {{ form.is_anonymous.label_tag }}
-      {{ form.is_anonymous.help_text }}
-      {{ form.is_anonymous }}
-      {{ form.is_anonymous.errors }}
     </div>
 
     <div class="form-row two-cols">
@@ -43,10 +46,10 @@
     </div>
 
     <div class="field">
-      {{ form.links.label_tag }}
-      {{ form.links.help_text }}
-      {{ form.links }}
-      {{ form.links.errors }}
+      {{ form.description.label_tag }}
+      {{ form.description.help_text }}
+      {{ form.description }}
+      {{ form.description.errors }}
     </div>
 
     <div class="field">
@@ -80,12 +83,18 @@
       {{ form.lessons }}
       {{ form.lessons.errors }}
     </div>
+    <div class="field">
+      {{ form.links.label_tag }}
+      {{ form.links.help_text }}
+      {{ form.links }}
+      {{ form.links.errors }}
+    </div>
+
 
     <div class="actions">
-      <button type="submit" name="preview" value="1">Preview</button>
       <button type="submit">Publish</button>
     </div>
   </form>
 
-  {# Inline preview removed; preview is a dedicated page for drafts. #}
+  {# Draft/preview flow removed. #}
 {% endblock %}

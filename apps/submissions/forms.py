@@ -5,11 +5,12 @@ from .models import Submission, strip_h1_h2
 
 
 class SubmissionForm(forms.ModelForm):
+    honeypot = forms.CharField(required=False, widget=forms.HiddenInput)
     is_anonymous = forms.TypedChoiceField(
         label='Publish as Anonymous? (Optional)',
         choices=((False, 'No'), (True, 'Yes')),
         coerce=lambda v: v in (True, 'True', 'true', '1', 1, 'on'),
-        widget=forms.RadioSelect,
+        widget=forms.Select,
         required=False,
         help_text="If selected, your username will be hidden on the public page.",
     )
@@ -17,7 +18,7 @@ class SubmissionForm(forms.ModelForm):
         label='Birth year',
         required=True,
         widget=forms.NumberInput(attrs={'min': 1995, 'max': date.today().year}),
-        help_text='Year you launched the project (1995–current).',
+        help_text='Year you launched the project',
     )
     lifespan = forms.IntegerField(
         label='Lifespan (Months. Optional)',
@@ -36,10 +37,11 @@ class SubmissionForm(forms.ModelForm):
         model = Submission
         fields = [
             'project_name', 'tagline', 'is_anonymous', 'birth_year', 'lifespan',
-            'idea', 'tech', 'wins', 'failure', 'lessons',
+            'description', 'idea', 'tech', 'wins', 'failure', 'lessons',
         ]
         labels = {
             'tagline': 'Tagline',
+            'description': 'Project Description',
             'wins': 'What went right?',
             'idea': 'Where the idea came from?',
             'tech': 'What was the tech & stack?',
@@ -49,20 +51,22 @@ class SubmissionForm(forms.ModelForm):
         help_texts = {
             'project_name': 'Max 120 characters. Clear and descriptive.',
             'tagline': 'Single line, max 160 characters.',
+            'description': 'Explain what the project is/was and who it was for.',
             'idea': 'Where the idea came from and the problem it solved. Markdown is supported except H1/H2 headers.',
             'tech': 'Describe the stack and key technical choices. Mention tradeoffs. Markdown is supported except H1/H2 headers.',
             'execution': 'How you built, launched, and iterated. Focus on actions and timelines. Markdown is supported except H1/H2 headers.',
-            'wins': 'What went well — design, code, launch tactics. Small wins matter.',
+            'wins': 'What went well? design, code, launch tactics? Small wins matter.',
             'failure': 'What went wrong and why. Be specific and honest. Markdown is supported except H1/H2 headers.',
             'lessons': 'Key lessons and actionable advice. Think about what you’d tell a friend. Markdown is supported except H1/H2 headers.',
         }
         widgets = {
             'tagline': forms.TextInput(attrs={'maxlength': 160}),
-            'idea': forms.Textarea(attrs={'rows': 6}),
-            'tech': forms.Textarea(attrs={'rows': 4}),
-            'wins': forms.Textarea(attrs={'rows': 4}),
-            'failure': forms.Textarea(attrs={'rows': 6}),
-            'lessons': forms.Textarea(attrs={'rows': 4}),
+            'description': forms.Textarea(attrs={'rows': 3}),
+            'idea': forms.Textarea(attrs={'rows': 3}),
+            'tech': forms.Textarea(attrs={'rows': 3}),
+            'wins': forms.Textarea(attrs={'rows': 3}),
+            'failure': forms.Textarea(attrs={'rows': 3}),
+            'lessons': forms.Textarea(attrs={'rows': 3}),
         }
 
     def clean_project_name(self):
@@ -107,7 +111,11 @@ class SubmissionForm(forms.ModelForm):
 
     def clean(self):
         cleaned = super().clean()
-        for f in ['idea', 'tech', 'wins', 'failure', 'lessons']:
+        # honeypot
+        if (self.cleaned_data.get('honeypot') or '').strip():
+            raise forms.ValidationError('Invalid submission.')
+
+        for f in ['description', 'idea', 'tech', 'wins', 'failure', 'lessons']:
             self._strip_h1_h2_for(f)
 
         # parse links

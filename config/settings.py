@@ -1,11 +1,18 @@
 import os
 from pathlib import Path
+import environ
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'dev-insecure-key-change-me')
-DEBUG = os.environ.get('DJANGO_DEBUG', '1') == '1'
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+# Environment
+env = environ.Env(
+    DJANGO_DEBUG=(bool, True),
+)
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+SECRET_KEY = env('DJANGO_SECRET_KEY', default='dev-insecure-key-change-me')
+DEBUG = env('DJANGO_DEBUG')
+ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -18,11 +25,6 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
 
     # Third-party
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.reddit',
     'taggit',
 
     # Local apps
@@ -37,7 +39,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -95,44 +96,47 @@ STORAGES = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Sites framework / Allauth
-SITE_ID = int(os.environ.get('SITE_ID', '1'))
+# Sites framework
+SITE_ID = int(env('SITE_ID', default='1'))
 
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-)
+# Admin URL
+ADMIN_URL = env('ADMIN_URL', default='admin/')
 
-ACCOUNT_LOGIN_METHODS = {"email", "username"}
-ACCOUNT_SIGNUP_FIELDS = ["email", "username*", "password1*", "password2*"]
-ACCOUNT_EMAIL_VERIFICATION = 'none'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-
-# Providers creds from env (configure in deployment)
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'APP': {
-            'client_id': os.environ.get('GOOGLE_CLIENT_ID', ''),
-            'secret': os.environ.get('GOOGLE_CLIENT_SECRET', ''),
-            'key': ''
-        }
-    },
-    'reddit': {
-        'APP': {
-            'client_id': os.environ.get('REDDIT_CLIENT_ID', ''),
-            'secret': os.environ.get('REDDIT_CLIENT_SECRET', ''),
-            'key': ''
-        }
-    }
-}
 
 # Security defaults for production
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SESSION_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_SECURE = not DEBUG
-SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', '0') == '1'
+CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=[])
+SECURE_SSL_REDIRECT = env.bool('SECURE_SSL_REDIRECT', default=False)
+SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
+SECURE_HSTS_PRELOAD = not DEBUG
+SECURE_REFERRER_POLICY = 'same-origin'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
 
 # SEO defaults
-SITE_NAME = os.environ.get('SITE_NAME', 'miserableproject.club')
-DEFAULT_OG_IMAGE = os.environ.get('MISERABLEPROJECT_DEFAULT_OG_IMAGE', os.environ.get('DEFAULT_OG_IMAGE', '/static/img/og-placeholder.svg'))
+SITE_NAME = env('SITE_NAME', default='miserableprojects.directory')
+DEFAULT_OG_IMAGE = env('MISERABLEPROJECT_DEFAULT_OG_IMAGE', default=env('DEFAULT_OG_IMAGE', default='/static/img/og-placeholder.svg'))
+
+# Email/Anymail configuration
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='no-reply@miserableprojects.directory')
+USE_ANYMAIL = env.bool('USE_ANYMAIL', default=False)
+ANYMAIL_BACKEND = env('ANYMAIL_BACKEND', default=None)  # e.g. 'anymail.backends.mailgun.EmailBackend'
+if USE_ANYMAIL and ANYMAIL_BACKEND:
+    INSTALLED_APPS.append('anymail')
+    EMAIL_BACKEND = ANYMAIL_BACKEND
+    # Common ANYMAIL dict; set provider-specific keys via env
+    ANYMAIL = {
+        'MAILGUN_API_KEY': env('MAILGUN_API_KEY', default=''),
+        'MAILGUN_SENDER_DOMAIN': env('MAILGUN_DOMAIN', default=''),
+    }
+
+# Fail fast if production missing a real secret key
+if not DEBUG and SECRET_KEY == 'dev-insecure-key-change-me':
+    raise RuntimeError('DJANGO_SECRET_KEY must be set in production')

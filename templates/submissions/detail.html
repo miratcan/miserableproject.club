@@ -1,29 +1,28 @@
 {% extends 'base.html' %}
-{% block title %}{{ object.project_name }} — miserableproject.club{% endblock %}
+{% block title %}{{ object.project_name }} — miserableprojects.directory{% endblock %}
 {% block page_title %}{{ object.project_name }}{% endblock %}
 {% block page_description %}{{ object.tagline }}{% endblock %}
 {% block meta_description %}{{ object.tagline }}{% endblock %}
 {% block canonical %}{{ request.scheme }}://{{ request.get_host }}{{ object.get_absolute_url }}{% endblock %}
 {% block content %}
   <article class="post">
-    {% if is_preview %}
-      <div class="notice" style="border: 4px double var(--c6); padding: 1rem; margin-bottom: var(--gap); color: var(--c15);">
-        Draft preview — only you can see this.
-        <a class="btn" href="{% url 'submit_edit' slug=object.slug %}" style="margin-left: 1rem;">Back to edit</a>
-        <form method="post" action="{{ object.get_absolute_url }}publish/" style="display:inline; margin-left: 1rem;">
+    <h1>{{ object.project_name }}</h1>
+    {% if request.user.is_authenticated and object.user == request.user %}
+      <div class="actions">
+        <a class="btn" href="{% url 'submit_edit' slug=object.slug %}"><span>E</span>dit</a>
+        <form method="post" action="{% url 'submission_delete' slug=object.slug %}" style="display:inline;">
           {% csrf_token %}
-          <button type="submit">Publish</button>
+          <button class="btn" type="submit" onclick="return confirm('Delete this submission?');"><span>D</span>elete</button>
         </form>
       </div>
     {% endif %}
-    <h1>{{ object.project_name }}</h1>
-    <p class="purpose">{{ object.tagline }}</p>
-    <p class="meta">
-      Relased: {{ object.birth_year }}
-      {% if object.lifespan %} - Lived for: {{ object.lifespan }} months{% endif %}
-      {% if object.is_anonymous %} - Created by Anonymous{% elif object.user %} - Created by {{ object.user.username }}{% endif %}
-    </p>
+    <p><strong>Tagline</strong>: {{ object.tagline }}</p>
+    <p><strong>Birth Year</strong>: {{ object.birth_year }}, <strong>Lifespan</strong>: {{ object.lifespan}}{% if not object.is_anonymous %}, <strong>Story by</strong>: @{{ object.user }}{% endif %}</p>
 
+    <section>
+      <h2>Project Description</h2>
+      <div class="md">{{ html.description|safe }}</div>
+    </section>
     <section>
       <h2>Where the idea came from?</h2>
       <div class="md">{{ html.idea|safe }}</div>
@@ -48,12 +47,10 @@
     {% if object.links_json %}
       <p class="links">
         {% for url in object.links_json %}
-          <a href="{{ url }}" rel="nofollow noopener">{{ url }}</a>{% if not forloop.last %} · {% endif %}
+          <a href="{{ url }}" rel="nofollow noopener">{{ url }}</a>{% if not forloop.last %}, {% endif %}
         {% endfor %}
       </p>
     {% endif %}
-
-
     {# Reports removed for MVP #}
   </article>
 {% endblock %}

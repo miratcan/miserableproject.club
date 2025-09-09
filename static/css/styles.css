@@ -25,7 +25,17 @@
   --fs: 16px;
   --lh: 24px;
 }
+.screen {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
 
+main{
+  flex-grow: 1;
+  padding-top: var(--gap);
+  padding-bottom: var(--gap);
+}
 em {
   color: var(--c6);
   font-style: normal;
@@ -62,6 +72,7 @@ strong {
 .wrapper {
   max-width: 800px;
   margin: 0 auto;
+  flex-grow: 1;
 }
 
 html,
@@ -84,7 +95,7 @@ body {
 
 pre {
   font-family: inherit;
-  padding: 1rem;
+  padding: var(--gap);
   background: #111;
   border: 1px solid gray;
   overflow-y: scroll;
@@ -105,7 +116,7 @@ li,
 table,
 blockquote {
   font-weight: normal;
-  margin: 0 0 1rem 0;
+  margin: 0 0 var(--gap) 0;
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
@@ -120,7 +131,6 @@ h1 {
   font-size: 1.4em;
   line-height: 1.73em;
   text-transform: uppercase;
-  text-align: center;
 }
 
 h2 {
@@ -174,13 +184,8 @@ a.tag {
 main,
 header,
 footer {
-  margin: 0 auto;
-  margin-bottom: var(--gap);
   box-sizing: border-box;
-}
-
-main {
-  padding: 0;
+  display: flex;
 }
 
 main a {
@@ -188,23 +193,26 @@ main a {
   text-decoration: underline;
 }
 
-nav {
+header {
   background: var(--c7);
-  padding: 0 1rem;
 }
 
-nav .wrapper {
+nav.wrapper {
   display: flex;
-  align-content: center;
-  gap: 0 1rem;
+  gap: 0 var(--gap);
   flex-wrap: wrap;
+}
 
+nav.wrapper .nav-right {
+  margin-left: auto;
+  display: flex;
+  gap: 0 var(--gap);
 }
 
 main nav,
 table, blockquote {
   background: transparent;
-  padding: 1rem;
+  padding: var(--gap);
   border: 4px double var(--c3);
   margin: 0 auto;
   margin-bottom: var(--gap);
@@ -231,14 +239,14 @@ img {
 /* Footer styles to mirror header */
 footer {
   background: var(--c7);
-  padding: 0 1rem;
+  padding: 0 var(--gap);
 }
 
 footer .wrapper {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0 1rem;
+  gap: 0 var(--gap);
   flex-wrap: wrap;
 }
 
@@ -271,10 +279,9 @@ main> :first-child {
 
 label {
   display: block;
-  color: var(--c14)
+  color: var(--c15)
 }
-
-input, textarea {
+input, textarea, select {
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
@@ -286,45 +293,33 @@ input, textarea {
   box-sizing: border-box;
   width: 100%;
 }
+.screen select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
 .screen input:focus,
 .screen textarea:focus,
 .screen select:focus,
 .screen button:focus {
-  outline: none;
-  box-shadow: none;
-  border: none;
+  outline: 2px dashed var(--c14);
+  outline-offset: 2px;
+}
+.actions {
+  text-align: right;
+  margin-bottom: var(--gap);
 }
 
 /* Remove default focus glow from links and buttons across browsers */
 .screen a:focus,
 .screen button:focus {
-  outline: none;
-  box-shadow: none;
+  outline: 2px dashed var(--c14);
+  outline-offset: 2px;
 }
 /* Firefox inner focus ring removal */
 .screen button::-moz-focus-inner { border: 0; }
 
-/* DOS-style focus highlight for fields: simple inversion */
-/* Hide native caret so we can draw a DOS block caret */
-.screen input:focus,
-.screen textarea:focus {
-  caret-color: transparent;
-}
-
-/* DOS-style block caret overlay */
-.screen .dos-caret {
-  position: absolute;
-  width: 0.6em; /* approx char width in DOS font */
-  height: 1.2em; /* approx line height */
-  background: var(--c14);
-  pointer-events: none;
-  animation: dos-blink 1s steps(1, end) infinite;
-  z-index: 10;
-}
-
-@keyframes dos-blink {
-  50% { opacity: 0; }
-}
+/* Default browser caret is used; custom DOS block caret removed */
 .help-text {
   color: var(--c8);
 }
@@ -334,7 +329,7 @@ input, textarea {
 
 .form-row.two-cols {
   display: flex;
-  gap: 1rem;
+  gap: var(--gap);
 }
 .form-row.two-cols .field {
   flex: 1 1 0;
@@ -351,7 +346,7 @@ input, textarea {
   color: var(--c0);
   background: var(--c2);
   border: none;
-  padding: 0.4rem 0.8rem;
+  padding: var(--gap);
   cursor: pointer;
 }
 .screen button:hover,
@@ -360,12 +355,10 @@ input, textarea {
 .screen .btn:hover {
   background: var(--c1);
 }
-blockquote p:last-child {
+blockquote > p:last-child, .wrapper > p:last-child {
   margin-bottom: 0;
 }
 .purpose, .meta {
-  color: var(--c9);
-  text-align: center;
-  margin-top: -0.5rem;
-  margin-bottom: 1.5rem;
+  background: var(--c9);
+  color: var(--c15);
 }

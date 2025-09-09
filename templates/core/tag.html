@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}#{{ tag_name }} — miserableproject.club{% endblock %}
+{% block title %}#{{ tag_name }} — miserableprojects.directory{% endblock %}
 {% block page_title %}#{{ tag_name }}{% endblock %}
 {% block page_description %}Posts tagged with #{{ tag_name }}{% endblock %}
 {% block canonical %}{{ request.scheme }}://{{ request.get_host }}{% url 'tag' tag_slug %}{% endblock %}

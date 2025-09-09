@@ -1,6 +1,5 @@
 {% if messages %}
-  <ul class="messages">
+  <ul class="messages" role="status" aria-live="polite">
     {% for m in messages %}<li class="{{ m.tags }}">{{ m }}</li>{% endfor %}
   </ul>
 {% endif %}
-

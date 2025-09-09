@@ -44,6 +44,7 @@ class Submission(models.Model):
     project_name = models.CharField(max_length=120)
     slug = models.SlugField(max_length=200, unique=True, db_index=True)
     tagline = models.CharField(max_length=160)
+    description = models.TextField(blank=True, default="")
     is_anonymous = models.BooleanField(default=False)
     birth_year = models.IntegerField(default=current_year, validators=[MinValueValidator(1995)])
     lifespan = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(1)])
@@ -75,6 +76,7 @@ class Submission(models.Model):
 
     def save(self, *args, **kwargs):
         # enforce strip of H1/H2
+        self.description = strip_h1_h2(self.description)
         self.idea = strip_h1_h2(self.idea)
         self.tech = strip_h1_h2(self.tech)
         self.failure = strip_h1_h2(self.failure)

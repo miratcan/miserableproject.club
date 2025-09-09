@@ -31,7 +31,7 @@ collectstatic:
 superuser:
     just dj createsuperuser
 
-loaddata file="apps/submissions/fixtures/sample_submissions.json":
+loaddata file="apps/submissions/fixtures/internetguzeldir_submission.json":
     just dj loaddata {{file}}
 
 shell:

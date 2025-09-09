@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Login — miserableprojects.directory{% endblock %}
+{% block page_title %}Login{% endblock %}
+{% block content %}
+  <h1>Login</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="form">
+      <div class="field">
+        {{ form.username.label_tag }}
+        {{ form.username.help_text }}
+        {{ form.username }}
+        {{ form.username.errors }}
+      </div>
+      <div class="field">
+        {{ form.password.label_tag }}
+        {{ form.password.help_text }}
+        {{ form.password }}
+        {{ form.password.errors }}
+      </div>
+    </div>
+    {% if next %}
+      <input type="hidden" name="next" value="{{ next }}">
+    {% endif %}
+    <div class="actions">
+      <button type="submit"><span>L</span>ogin</button>
+    </div>
+  </form>
+  <p style="margin-top:1rem;">
+    <a href="{% url 'password_reset' %}"><span>F</span>orgot password?</a> - <a href="{% url 'signup' %}"><span>S</span>ign up</a>
+  </p>
+{% endblock %}
