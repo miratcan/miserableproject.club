@@ -43,3 +43,9 @@ class SubmissionFormTests(TestCase):
             "http://example.com",
             "https://foo.com",
         ])
+
+    def test_tags_parsed(self):
+        data = self._valid_data(tags="python, django, ")
+        form = SubmissionForm(data)
+        self.assertTrue(form.is_valid())
+        self.assertCountEqual(form.cleaned_data["tags"], ["python", "django"])

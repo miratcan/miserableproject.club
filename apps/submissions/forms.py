@@ -32,12 +32,17 @@ class SubmissionForm(forms.ModelForm):
         help_text='One URL per line. Add relevant links (demo, landing page, repo).',
         widget=forms.Textarea(attrs={'rows': 2})
     )
+    tags = TagField(
+        label='Tags (Optional)',
+        required=False,
+        help_text='Comma-separated tags for this submission.',
+    )
 
     class Meta:
         model = Submission
         fields = [
             'project_name', 'tagline', 'is_anonymous', 'birth_year', 'lifespan',
-            'description', 'idea', 'tech', 'wins', 'failure', 'lessons',
+            'description', 'idea', 'tech', 'tags', 'wins', 'failure', 'lessons',
         ]
         labels = {
             'tagline': 'Tagline',
@@ -122,6 +127,10 @@ class SubmissionForm(forms.ModelForm):
 
     def clean_lessons(self):
         return strip_h1_h2(self.cleaned_data.get('lessons', ''))
+
+    def clean_tags(self):
+        tags = self.cleaned_data.get('tags') or []
+        return [t.strip() for t in tags if t.strip()]
 
     def clean(self):
         cleaned = super().clean()

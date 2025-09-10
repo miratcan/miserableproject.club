@@ -89,7 +89,7 @@ class Command(BaseCommand):
             # tags
             tags = list({random.choice(["python", "django", "react", "redis", "celery", "postgres", "docker", "aws"]) for _ in range(random.randint(1, 4))})
             if tags:
-                s.stack_tags.add(*tags)
+                s.tags.add(*tags)
             created += 1
 
         self.stdout.write(self.style.SUCCESS(f"Created {created} submissions (user @{user.username})."))
