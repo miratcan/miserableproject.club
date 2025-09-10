@@ -38,3 +38,8 @@ class CommentFormTests(TestCase):
     def test_empty_form(self):
         form = CommentForm(data={'content': ''})
         self.assertFalse(form.is_valid())
+
+    def test_help_text_ascii(self):
+        form = CommentForm()
+        help_text = form.fields['content'].help_text or ''
+        self.assertTrue(help_text.isascii())
