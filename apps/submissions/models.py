@@ -76,11 +76,9 @@ class Submission(models.Model):
 
     def save(self, *args, **kwargs):
         # enforce strip of H1/H2
-        self.description = strip_h1_h2(self.description)
-        self.idea = strip_h1_h2(self.idea)
-        self.tech = strip_h1_h2(self.tech)
-        self.failure = strip_h1_h2(self.failure)
-        self.lessons = strip_h1_h2(self.lessons)
+        markdown_fields = ['description', 'idea', 'tech', 'failure', 'lessons']
+        for field in markdown_fields:
+            setattr(self, field, strip_h1_h2(getattr(self, field)))
 
         if not self.slug:
             base = slugify(self.project_name)[:64] or 'post'
