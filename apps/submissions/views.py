@@ -119,7 +119,7 @@ class SubmitView(LoginRequiredMixin, FormView):
 
 
 class LatestFeed(Feed):
-    title = "miserableprojects.directory — Latest Submissions"
+    title = "miserableprojects.directory - Latest Submissions"
     link = "/rss.xml"
     description = "Latest 50 posts"
 
