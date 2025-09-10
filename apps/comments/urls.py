@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import CommentUpdateView, CommentDeleteView
+from .views import CommentView, CommentDeleteView
 
 urlpatterns = [
-    path("<int:pk>/edit/", CommentUpdateView.as_view(), name="comment_edit"),
+    path("form/", CommentView.as_view(), name="comment_form"),
     path("<int:pk>/delete/", CommentDeleteView.as_view(), name="comment_delete"),
 ]
