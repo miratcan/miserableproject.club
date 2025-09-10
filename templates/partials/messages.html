@@ -1,5 +1,29 @@
 {% if messages %}
   <ul class="messages" role="status" aria-live="polite">
-    {% for m in messages %}<li class="{{ m.tags }}">{{ m }}</li>{% endfor %}
+    {% for m in messages %}
+      <li class="{{ m.tags }}">
+        <span class="message-text">{{ m }}</span>
+        <button type="button" class="close" aria-label="Dismiss">X</button>
+      </li>
+    {% endfor %}
   </ul>
+  <script>
+    (function() {
+      var container = document.querySelector('.messages');
+      if (!container) return;
+      container.addEventListener('click', function(e) {
+        if (e.target && e.target.classList.contains('close')) {
+          var li = e.target.closest('li');
+          if (li) li.remove();
+        }
+      });
+      // Auto-dismiss success messages after 4 seconds
+      var successItems = container.querySelectorAll('li.success');
+      successItems.forEach(function(li) {
+        setTimeout(function() {
+          if (li && li.parentNode) li.remove();
+        }, 4000);
+      });
+    })();
+  </script>
 {% endif %}

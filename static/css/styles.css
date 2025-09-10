@@ -1,8 +1,10 @@
+/* ===== Fonts ===== */
 @font-face {
   font-family: Dos;
   src: url(/dos.ttf);
 }
 
+/* ===== Root and Theme Variables ===== */
 :root {
   --c0: #000000;
   --c1: #000080;
@@ -15,7 +17,7 @@
   --c8: #555555;
   --c9: #5555ff;
   --c10: #1fdbdb;
-  --c12: #55ff55;
+  --c11: #55ff55;
   --c12: #ff55ff;
   --c13: #ff5555;
   --c14: #ffff55;
@@ -25,13 +27,22 @@
   --fs: 16px;
   --lh: 24px;
 }
+
+/* ===== Layout ===== */
 .screen {
   display: flex;
   flex-direction: column;
   height: 100vh;
 }
+a::before {
+  content: "[";
+}
 
-main{
+a::after {
+  content: "]";
+}
+
+main {
   flex-grow: 1;
   padding-top: var(--gap);
   padding-bottom: var(--gap);
@@ -41,13 +52,15 @@ em {
   font-style: normal;
 }
 
+/* ===== Base Typography ===== */
 strong {
   font-weight: normal;
   color: var(--c15);
 }
 
+/* ===== Scrollbar ===== */
 ::-webkit-scrollbar {
-  width: var(--gap)
+  width: var(--gap);
 }
 
 ::-webkit-scrollbar-track {
@@ -69,6 +82,7 @@ strong {
   line-height: inherit;
 }
 
+/* ===== Layout Containers ===== */
 .wrapper {
   max-width: 800px;
   margin: 0 auto;
@@ -106,6 +120,7 @@ code {
   font-family: inherit;
 }
 
+/* ===== Headings, Text, Tables ===== */
 h1,
 h2,
 h3,
@@ -132,6 +147,10 @@ h1 {
   line-height: 1.73em;
   text-transform: uppercase;
 }
+h1 .tagline {
+  color: var(--c7);
+  text-transform: initial;
+}
 
 h2 {
   font-size: 1.3em;
@@ -143,6 +162,7 @@ h3 {
   line-height: 1.48em;
 }
 
+/* Heading colors */
 h1,
 h2,
 h3 {
@@ -163,17 +183,24 @@ ul#articles {
   padding: 0 0 0 1em;
 }
 
+/* Links */
+a {
+  color: var(--c10);
+  text-decoration: none;
+}
+
+/* ===== Navigation ===== */
 nav a {
   text-decoration: none;
   color: var(--c0);
 }
 
-nav a span {
-  color: var(--c5);
+nav a.active {
+  text-decoration: underline;
 }
 
-a.active {
-  text-decoration: underline;
+nav a span {
+  color: var(--c5);
 }
 
 a.tag {
@@ -181,6 +208,7 @@ a.tag {
   justify-content: center;
 }
 
+/* ===== Structural Elements ===== */
 main,
 header,
 footer {
@@ -188,10 +216,7 @@ footer {
   display: flex;
 }
 
-main a {
-  color: var(--c10);
-  text-decoration: underline;
-}
+/* main content links inherit default link styles */
 
 header {
   background: var(--c7);
@@ -210,7 +235,8 @@ nav.wrapper .nav-right {
 }
 
 main nav,
-table, blockquote {
+table,
+blockquote {
   background: transparent;
   padding: var(--gap);
   border: 4px double var(--c3);
@@ -219,7 +245,7 @@ table, blockquote {
 }
 
 main nav a {
-  // color: var(--c2);
+  /* color: var(--c2); */
 }
 
 .pagination {
@@ -229,7 +255,7 @@ main nav a {
 p:has(> img:only-child) {
   display: flex;
   justify-content: center;
-  border: calc(var(--ln) * 2) double var(--c3)
+  border: calc(var(--ln) * 2) double var(--c3);
 }
 
 img {
@@ -269,7 +295,7 @@ footer a {
   }
 
   ul#articles li a {
-    display: block
+    display: block;
   }
 }
 
@@ -279,7 +305,7 @@ main> :first-child {
 
 label {
   display: block;
-  color: var(--c15)
+  color: var(--c15);
 }
 input, textarea, select {
   font-family: inherit;
@@ -302,18 +328,27 @@ input, textarea, select {
 .screen textarea:focus,
 .screen select:focus,
 .screen button:focus {
-  outline: 2px dashed var(--c14);
+  outline: 4px double var(--c14);
   outline-offset: 2px;
 }
 .actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--gap);
   text-align: right;
   margin-bottom: var(--gap);
+}
+/* Keep action buttons laid out inline consistently */
+.actions form {
+  display: inline;
+  margin: 0;
 }
 
 /* Remove default focus glow from links and buttons across browsers */
 .screen a:focus,
 .screen button:focus {
-  outline: 2px dashed var(--c14);
+  outline: 2px solid var(--c14);
   outline-offset: 2px;
 }
 /* Firefox inner focus ring removal */
@@ -325,6 +360,81 @@ input, textarea, select {
 }
 .field {
   margin-bottom: var(--gap);
+}
+
+/* Form errors */
+.errorlist {
+  list-style: none;
+  margin: var(--gap) 0 0 0;
+  padding: var(--gap);
+  border: 4px double var(--c13);
+  background: var(--c5);
+  color: var(--c15);
+}
+.errorlist li {
+  margin: 0;
+}
+
+/* Messages (Django contrib.messages) */
+.messages {
+  margin: 0 0 var(--gap) 0;
+  padding: 0;
+}
+.messages li {
+  list-style: none;
+  margin: 0 0 var(--gap) 0;
+  padding: var(--gap);
+  border: 4px double var(--c10);
+  background: var(--c1);
+  color: var(--c15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.messages li:last-child {
+  margin-bottom: 0;
+}
+.messages li.success {
+  border-color: var(--c3);
+}
+.messages li.error,
+.messages li.danger {
+  border-color: var(--c13);
+}
+.messages li.warning {
+  border-color: var(--c14);
+}
+.messages li.info {
+  border-color: var(--c10);
+}
+
+/* Messages - close button overrides */
+.messages button.close {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0 0 0 var(--gap);
+  color: var(--c15);
+  cursor: pointer;
+}
+.messages button.close:hover {
+  color: var(--c14);
+}
+
+/* Attention blink for messages and form errors */
+@keyframes mpd-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.messages .message-text,
+.errorlist li {
+  animation: mpd-blink 0.9s step-end 3;
+}
+@media (prefers-reduced-motion: reduce) {
+  .messages .message-text,
+  .errorlist li {
+    animation: none;
+  }
 }
 
 .form-row.two-cols {
@@ -354,6 +464,7 @@ input, textarea, select {
 .screen input[type="button"]:hover,
 .screen .btn:hover {
   background: var(--c1);
+  color: var(--c15);
 }
 blockquote > p:last-child, .wrapper > p:last-child {
   margin-bottom: 0;

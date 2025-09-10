@@ -1,23 +1,22 @@
 {% extends 'base.html' %}
-{% block title %}{{ object.project_name }} — miserableprojects.directory{% endblock %}
+{% block title %}{{ object.project_name }} - miserableprojects.directory{% endblock %}
 {% block page_title %}{{ object.project_name }}{% endblock %}
 {% block page_description %}{{ object.tagline }}{% endblock %}
 {% block meta_description %}{{ object.tagline }}{% endblock %}
 {% block canonical %}{{ request.scheme }}://{{ request.get_host }}{{ object.get_absolute_url }}{% endblock %}
 {% block content %}
   <article class="post">
-    <h1>{{ object.project_name }}</h1>
     {% if request.user.is_authenticated and object.user == request.user %}
       <div class="actions">
         <a class="btn" href="{% url 'submit_edit' slug=object.slug %}"><span>E</span>dit</a>
-        <form method="post" action="{% url 'submission_delete' slug=object.slug %}" style="display:inline;">
+        <form method="post" action="{% url 'submission_delete' slug=object.slug %}">
           {% csrf_token %}
           <button class="btn" type="submit" onclick="return confirm('Delete this submission?');"><span>D</span>elete</button>
         </form>
       </div>
     {% endif %}
-    <p><strong>Tagline</strong>: {{ object.tagline }}</p>
-    <p><strong>Birth Year</strong>: {{ object.birth_year }}, <strong>Lifespan</strong>: {{ object.lifespan}}{% if not object.is_anonymous %}, <strong>Story by</strong>: @{{ object.user }}{% endif %}</p>
+    <h1>{{ object.project_name }} <span class="tagline">{{ object.tagline }}</span></h1>
+    <p><strong>Birth Year</strong>: {{ object.birth_year }}, <strong>Lifespan</strong>: {{ object.lifespan}}{% if not object.is_anonymous %}, <strong>Story by</strong>: <a href="{% url 'user_profile' username=object.user.username %}">@{{ object.user.username }}</a>{% endif %}</p>
 
     <section>
       <h2>Project Description</h2>
