@@ -1,26 +1,24 @@
-<div id="comment-{{ comment.pk }}">
-  <div class="comment">
-    <p><strong>{% if submission.is_anonymous and comment.user_id == submission.user_id %}anonymous{% else %}{{ comment.user.username }}{% endif %}</strong>{% if comment.user_id == submission.user_id %} (submission owner){% endif %} - {{ comment.created_at|timesince }} ago</p>
-    {% if comment.is_deleted %}
-      <p>[This comment is deleted by owner]</p>
-    {% else %}
-      <p>{{ comment.content }}</p>
-      {% if request.user == comment.user %}
-        <div class="actions">
-          <a href="{% url 'comment_form' %}?comment={{ comment.pk }}">Edit</a>
-          <a href="{% url 'comment_delete' pk=comment.pk %}">Delete</a>
-        </div>
-      {% endif %}
-      {% if can_comment %}
-        <p><a href="{% url 'comment_form' %}?parent={{ comment.pk }}">Reply</a></p>
-      {% endif %}
-    {% endif %}
-    {% if comment.replies.all %}
-      <div class="comment-list">
-        {% for reply in comment.replies.all %}
-          {% include 'partials/comment.html' with comment=reply submission=submission can_comment=can_comment %}
-        {% endfor %}
+<div class="comment" id="comment-{{ comment.pk }}">
+  <p><strong>{% if submission.is_anonymous and comment.user_id == submission.user_id %}anonymous{% else %}{{ comment.user.username }}{% endif %}</strong>{% if comment.user_id == submission.user_id %} (submission owner){% endif %} - {{ comment.created_at|timesince }} ago</p>
+  {% if comment.is_deleted %}
+    <p>[This comment is deleted by owner]</p>
+  {% else %}
+    <p>{{ comment.content }}</p>
+    {% if request.user == comment.user or can_comment %}
+      <div class="actions">
+        {% if can_comment %}
+          <a href="{% url 'comment_form' %}?parent={{ comment.pk }}">Reply</a>
+        {% endif %}
+        <a href="{% url 'comment_form' %}?comment={{ comment.pk }}">Edit</a>
+        <a href="{% url 'comment_delete' pk=comment.pk %}">Delete</a>
       </div>
     {% endif %}
-  </div>
+  {% endif %}
+  {% if comment.replies.all %}
+    <div class="comment-list">
+      {% for reply in comment.replies.all %}
+        {% include 'partials/comment.html' with comment=reply submission=submission can_comment=can_comment %}
+      {% endfor %}
+    </div>
+  {% endif %}
 </div>
