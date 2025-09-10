@@ -286,7 +286,7 @@ blockquote {
 }
 
 main nav a {
-  /* color: var(--c2); */
+  color: var(--c3);
 }
 
 .pagination {

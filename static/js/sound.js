@@ -1,7 +1,7 @@
 // SFX from zero: toggle + precise beep aligned to visuals
 (function () {
   var KEY = 'sound_enabled';
-  var enabled = false;
+  var enabled = true; // default to ON
   var toggleEl = null;
 
   var ctx = null;
@@ -202,7 +202,15 @@
 
   function init() {
     bindToggle();
-    try { enabled = localStorage.getItem(KEY) === '1'; } catch (_) { enabled = false; }
+    // Default to ON when no preference stored
+    try {
+      var stored = localStorage.getItem(KEY);
+      if (stored === null) {
+        enabled = true;
+      } else {
+        enabled = (stored === '1');
+      }
+    } catch (_) { enabled = true; }
     setToggleLabel();
     if (enabled) {
       ensureContext();

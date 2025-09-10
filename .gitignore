@@ -25,3 +25,4 @@ staticfiles/
 dist/
 build/
 
+cache/
