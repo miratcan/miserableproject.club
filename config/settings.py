@@ -140,3 +140,22 @@ if USE_ANYMAIL and ANYMAIL_BACKEND:
 # Fail fast if production missing a real secret key
 if not DEBUG and SECRET_KEY == 'dev-insecure-key-change-me':
     raise RuntimeError('DJANGO_SECRET_KEY must be set in production')
+
+# Caching (file-based, no external services)
+CACHE_DIR = BASE_DIR / 'cache'
+try:
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+except Exception:
+    # In read-only environments, directory may already exist or be created at deploy time
+    pass
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': str(CACHE_DIR),
+        'TIMEOUT': 300,  # 5 minutes default TTL
+        'OPTIONS': {
+            'MAX_ENTRIES': 10000,
+        },
+    }
+}

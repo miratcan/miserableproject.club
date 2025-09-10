@@ -9,6 +9,7 @@ from django.contrib import messages
 from .models import Submission
 from .forms import SubmissionForm
 from .markdown import render_markdown
+from django.core.cache import cache
 
 
 class SubmissionDetailView(DetailView):
@@ -24,13 +25,22 @@ class SubmissionDetailView(DetailView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         s = self.object
+        # Cache rendered markdown per-field, invalidated on update
+        def _md(field_name: str, text: str) -> str:
+            key = f"md:{field_name}:{s.pk}:{int(s.updated_at.timestamp())}"
+            html = cache.get(key)
+            if html is None:
+                html = render_markdown(text)
+                cache.set(key, html, 12 * 60 * 60)  # 12 hours
+            return html
+
         ctx['html'] = {
-            'description': render_markdown(s.description),
-            'idea': render_markdown(s.idea),
-            'tech': render_markdown(s.tech),
-            'wins': render_markdown(s.wins),
-            'failure': render_markdown(s.failure),
-            'lessons': render_markdown(s.lessons),
+            'description': _md('description', s.description),
+            'idea': _md('idea', s.idea),
+            'tech': _md('tech', s.tech),
+            'wins': _md('wins', s.wins),
+            'failure': _md('failure', s.failure),
+            'lessons': _md('lessons', s.lessons),
         }
         return ctx
 
