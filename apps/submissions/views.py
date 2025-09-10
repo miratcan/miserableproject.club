@@ -56,8 +56,10 @@ class SubmissionDetailView(DetailView):
         }
 
         ctx["can_comment"] = self._user_can_comment(self.request.user)
-        ctx["comment_form"] = CommentForm()
-        ctx["comments"] = s.comments.all()
+        ctx["comment_form"] = CommentForm(
+            initial={"parent": self.request.GET.get("parent")}
+        )
+        ctx["comments"] = s.comments.select_related("user").filter(parent__isnull=True)
         return ctx
 
     def post(self, request, *args, **kwargs):
@@ -77,6 +79,9 @@ class SubmissionDetailView(DetailView):
             comment = form.save(commit=False)
             comment.user = request.user
             comment.submission = self.object
+            parent = form.cleaned_data.get("parent")
+            if parent and parent.submission_id != self.object.id:
+                comment.parent = None
             comment.save()
             messages.success(request, "Your comment has been added.")
             return redirect(self.object.get_absolute_url())
