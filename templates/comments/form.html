@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Comment - miserableprojects.directory{% endblock %}
+{% block content %}
+  {% if comment %}
+    <h1>Update Comment</h1>
+    <p>You're updating your comment on submission: {{ submission.project_name }} ({{ submission.tagline }})</p>
+  {% elif parent %}
+    <h1>Reply to Comment</h1>
+    <p>You're replying on a comment on submission: {{ submission.project_name }} ({{ submission.tagline }})</p>
+  {% else %}
+    <h1>New Comment</h1>
+    <p>You're commenting on submission: {{ submission.project_name }} ({{ submission.tagline }})</p>
+  {% endif %}
+  <form method="post">
+    {% csrf_token %}
+    <div class="field">
+      {{ form.content.label_tag }}
+      {{ form.content.help_text }}
+      {{ form.content }}
+      {{ form.content.errors }}
+    </div>
+    {{ form.parent }}
+    <div class="actions">
+      <button type="submit">Save</button>
+    </div>
+  </form>
+{% endblock %}
