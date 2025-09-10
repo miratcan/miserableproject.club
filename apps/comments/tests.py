@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 from apps.submissions.models import Submission
 from .models import Comment
 from .forms import CommentForm
@@ -65,3 +66,52 @@ class CommentFormTests(TestCase):
     def test_textarea_rows(self):
         form = CommentForm()
         self.assertEqual(form.fields["content"].widget.attrs.get("rows"), 3)
+
+
+class CommentViewMessageTests(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            username="u1", password="pw"
+        )
+        self.client.force_login(self.user)
+        self.submission = Submission.objects.create(
+            user=self.user,
+            project_name="Test Project",
+            tagline="A test project",
+            idea="Test idea",
+            tech="Test tech",
+            failure="Test failure",
+            lessons="Test lessons",
+        )
+
+    def test_create_comment_shows_message(self):
+        url = reverse("comment_form") + f"?submission={self.submission.pk}"
+        resp = self.client.post(
+            url, {"content": "Hello", "parent": ""}, follow=True
+        )
+        messages = [str(m) for m in resp.context["messages"]]
+        self.assertIn("Comment added successfully.", messages)
+
+    def test_update_comment_shows_message(self):
+        c = Comment.objects.create(
+            user=self.user,
+            submission=self.submission,
+            content="Old",
+        )
+        url = reverse("comment_form") + f"?comment={c.pk}"
+        resp = self.client.post(
+            url, {"content": "New", "parent": ""}, follow=True
+        )
+        messages = [str(m) for m in resp.context["messages"]]
+        self.assertIn("Comment updated successfully.", messages)
+
+    def test_delete_comment_shows_message(self):
+        c = Comment.objects.create(
+            user=self.user,
+            submission=self.submission,
+            content="To delete",
+        )
+        url = reverse("comment_delete", args=[c.pk])
+        resp = self.client.post(url, follow=True)
+        messages = [str(m) for m in resp.context["messages"]]
+        self.assertIn("Comment deleted successfully.", messages)
