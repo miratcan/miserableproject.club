@@ -3,7 +3,7 @@
   {% if comment.is_deleted %}
     <p>[This comment is deleted by owner]</p>
   {% else %}
-    <p>{{ comment.content }}</p>
+    <p>{{ comment.content_html|safe }}</p>
     {% if request.user == comment.user or can_comment %}
       <div class="actions">
         {% if can_comment %}

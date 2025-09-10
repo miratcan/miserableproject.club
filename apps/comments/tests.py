@@ -47,6 +47,16 @@ class CommentModelTests(TestCase):
         )
         self.assertEqual(reply.parent, parent)
 
+    def test_content_html_renders_markdown(self):
+        comment = Comment.objects.create(
+            user=self.user,
+            submission=self.submission,
+            content="**bold** <span>bad</span>",
+        )
+        html = comment.content_html
+        self.assertIn("<strong>bold</strong>", html)
+        self.assertNotIn("<span>", html)
+
 
 class CommentFormTests(TestCase):
     def test_valid_form(self):
