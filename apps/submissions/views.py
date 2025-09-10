@@ -1,7 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import DetailView, FormView, View
-
 from django.contrib.syndication.views import Feed
 from django.urls import reverse
 from django.contrib import messages
@@ -10,6 +9,8 @@ from .models import Submission
 from .forms import SubmissionForm
 from .markdown import render_markdown
 from django.core.cache import cache
+from apps.comments.forms import CommentForm
+from apps.comments.models import Comment
 
 
 class SubmissionDetailView(DetailView):
@@ -42,7 +43,43 @@ class SubmissionDetailView(DetailView):
             'failure': _md('failure', s.failure),
             'lessons': _md('lessons', s.lessons),
         }
+        
+        can_comment = False
+        if self.request.user.is_authenticated:
+            if not hasattr(self, '_can_comment'):
+                self._can_comment = Submission.objects.filter(user=self.request.user).exists()
+            can_comment = self._can_comment
+
+        ctx['can_comment'] = can_comment
+        ctx['comment_form'] = CommentForm()
+        ctx['comments'] = s.comments.all()
         return ctx
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = CommentForm(request.POST)
+
+        if form.is_valid():
+            if not request.user.is_authenticated:
+                return redirect('login')
+            
+            if not hasattr(self, '_can_comment'):
+                self._can_comment = Submission.objects.filter(user=request.user).exists()
+
+            if not self._can_comment:
+                messages.error(request, "You need to have at least one submission to comment.")
+                return redirect(self.object.get_absolute_url())
+
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.submission = self.object
+            comment.save()
+            messages.success(request, "Your comment has been added.")
+            return redirect(self.object.get_absolute_url())
+        
+        context = self.get_context_data()
+        context['comment_form'] = form
+        return self.render_to_response(context)
 
 
 class SubmitView(LoginRequiredMixin, FormView):

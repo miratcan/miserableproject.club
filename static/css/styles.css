@@ -514,3 +514,10 @@ blockquote > p:last-child, .wrapper > p:last-child {
   background: var(--c9);
   color: var(--c15);
 }
+.hidden {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

@@ -10,7 +10,17 @@
   <meta property="og:description" content="{% block og_description %}{% block page_description %}{% endblock %}{% endblock %}">
   <meta property="og:image" content="{% block og_image %}{{ DEFAULT_OG_IMAGE|default:'/static/img/og-placeholder.png' }}{% endblock %}">
   <link rel="stylesheet" href="/static/css/styles.css">
-  {% block head_extra %}{% endblock %}
+  {% block head_extra %}
+  {% if GOOGLE_ANALYTICS_ID and not DEBUG %}
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ GOOGLE_ANALYTICS_ID }}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{ GOOGLE_ANALYTICS_ID }}');
+  </script>
+  {% endif %}
+  {% endblock %}
 </head>
 <body>
   <div class="screen">

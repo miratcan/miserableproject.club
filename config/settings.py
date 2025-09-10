@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     # Local apps
     'apps.core',
     'apps.submissions',
+    'apps.comments',
 ]
 
 MIDDLEWARE = [
@@ -122,6 +123,7 @@ X_FRAME_OPTIONS = 'DENY'
 # SEO defaults
 SITE_NAME = env('SITE_NAME', default='miserableprojects.directory')
 DEFAULT_OG_IMAGE = env('MISERABLEPROJECT_DEFAULT_OG_IMAGE', default=env('DEFAULT_OG_IMAGE', default='/static/img/og-placeholder.svg'))
+GOOGLE_ANALYTICS_ID = env('GOOGLE_ANALYTICS_ID', default='')
 
 # Email/Anymail configuration
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

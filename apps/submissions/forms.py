@@ -5,7 +5,7 @@ from .models import Submission, strip_h1_h2
 
 
 class SubmissionForm(forms.ModelForm):
-    honeypot = forms.CharField(required=False, widget=forms.HiddenInput)
+    honeypot = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'hidden'}))
     is_anonymous = forms.TypedChoiceField(
         label='Publish as Anonymous? (Optional)',
         choices=((False, 'No'), (True, 'Yes')),
@@ -106,17 +106,29 @@ class SubmissionForm(forms.ModelForm):
             raise forms.ValidationError('Must be at least 1 month.')
         return y
 
-    def _strip_h1_h2_for(self, field):
-        self.cleaned_data[field] = strip_h1_h2(self.cleaned_data.get(field) or '')
+    def clean_description(self):
+        return strip_h1_h2(self.cleaned_data.get('description', ''))
+
+    def clean_idea(self):
+        return strip_h1_h2(self.cleaned_data.get('idea', ''))
+
+    def clean_tech(self):
+        return strip_h1_h2(self.cleaned_data.get('tech', ''))
+
+    def clean_wins(self):
+        return strip_h1_h2(self.cleaned_data.get('wins', ''))
+
+    def clean_failure(self):
+        return strip_h1_h2(self.cleaned_data.get('failure', ''))
+
+    def clean_lessons(self):
+        return strip_h1_h2(self.cleaned_data.get('lessons', ''))
 
     def clean(self):
         cleaned = super().clean()
         # honeypot
         if (self.cleaned_data.get('honeypot') or '').strip():
             raise forms.ValidationError('Invalid submission.')
-
-        for f in ['description', 'idea', 'tech', 'wins', 'failure', 'lessons']:
-            self._strip_h1_h2_for(f)
 
         # parse links
         raw_links = (self.data.get('links') or '').strip()

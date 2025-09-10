@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 
 
 class SignupForm(UserCreationForm):
-    honeypot = forms.CharField(required=False, widget=forms.HiddenInput)
+    honeypot = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'hidden'}))
     email = forms.EmailField(required=True)
 
     class Meta:

@@ -35,16 +35,12 @@ class TagView(TemplateView):
         names, tag_items, mapping = get_tag_items()
         active_name = mapping.get(slug)
 
-        # Build base queryset and filter in Python for SQLite compatibility
-        base_qs = Submission.objects.filter(status='published').prefetch_related('stack_tags').order_by('-created_at')
+        qs = Submission.objects.filter(status='published').order_by('-created_at')
         if active_name:
-            items = [s for s in base_qs if active_name in s.stack_tags.names()]
-        else:
-            items = list(base_qs)
+            qs = qs.filter(stack_tags__name__in=[active_name])
 
-        # pagination
         from django.core.paginator import Paginator
-        paginator = Paginator(items, 20)
+        paginator = Paginator(qs, 20)
         page_obj = paginator.get_page(page)
 
         ctx['tag_slug'] = slug

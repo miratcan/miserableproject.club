@@ -33,10 +33,36 @@
     {% if object.links_json %}
       <p class="links">
         {% for url in object.links_json %}
-          <a href="{{ url }}" rel="nofollow noopener">{{ url }}</a>{% if not forloop.last %}, {% endif %}
+          <a href="{{ url }}" rel="nofollow noopener noreferrer">{{ url }}</a>{% if not forloop.last %}, {% endif %}
         {% endfor %}
       </p>
     {% endif %}
     {# Reports removed for MVP #}
   </article>
+
+  <section class="comments">
+    <h2>Comments</h2>
+    {% for comment in comments %}
+      <div class="comment">
+        <p><strong>{{ comment.user.username }}</strong> - {{ comment.created_at|timesince }} ago</p>
+        <p>{{ comment.content }}</p>
+      </div>
+    {% empty %}
+      <p>No comments yet.</p>
+    {% endfor %}
+
+    {% if can_comment %}
+      <form method="post">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button type="submit">Add Comment</button>
+      </form>
+    {% else %}
+      {% if user.is_authenticated %}
+        <p>You need to have at least one submission to comment.</p>
+      {% else %}
+        <p><a href="{% url 'login' %}?next={{ request.path }}">Log in</a> to comment.</p>
+      {% endif %}
+    {% endif %}
+  </section>
 {% endblock %}
