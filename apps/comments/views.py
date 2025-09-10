@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
@@ -56,6 +57,10 @@ class CommentView(LoginRequiredMixin, View):
                 if parent and parent.submission_id != self.submission.id:
                     comment.parent = None
             comment.save()
+            if self.comment:
+                messages.success(request, "Comment updated successfully.")
+            else:
+                messages.success(request, "Comment added successfully.")
             return redirect(comment.submission.get_absolute_url())
         context = {
             "form": form,
@@ -73,6 +78,7 @@ class CommentDeleteView(LoginRequiredMixin, View):
         )
         comment.is_deleted = True
         comment.save()
+        messages.success(request, "Comment deleted successfully.")
         return redirect(comment.submission.get_absolute_url())
 
     def post(self, request, pk):
