@@ -1,5 +1,5 @@
 <div class="comment" id="comment-{{ comment.pk }}">
-  <p><strong>{% if submission.is_anonymous and comment.user_id == submission.user_id %}anonymous{% else %}{{ comment.user.username }}{% endif %}</strong>{% if comment.user_id == submission.user_id %} (submission owner){% endif %} - {{ comment.created_at|timesince }} ago</p>
+  <p>{% if submission.is_anonymous and comment.user_id == submission.user_id %}[ anonymous ]{% else %}<a href="{% url 'user_profile' comment.user.username %}">{{ comment.user.username }}</a>{% endif %}</strong>{% if comment.user_id == submission.user_id %} (submission owner){% endif %} - {{ comment.created_at|timesince }} ago</p>
   {% if comment.is_deleted %}
     <p>[This comment is deleted by owner]</p>
   {% else %}

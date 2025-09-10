@@ -521,3 +521,8 @@ blockquote > p:last-child, .wrapper > p:last-child {
   height: 1px;
   overflow: hidden;
 }
+.comment {
+  border-left: 2px var(--c8) solid;
+  padding-left: var(--gap);
+   
+}
