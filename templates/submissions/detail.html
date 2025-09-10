@@ -18,31 +18,18 @@
     <h1>{{ object.project_name }} <span class="tagline">{{ object.tagline }}</span></h1>
     <p><strong>Birth Year</strong>: {{ object.birth_year }}, <strong>Lifespan</strong>: {{ object.lifespan}}{% if not object.is_anonymous %}, <strong>Story by</strong>: <a href="{% url 'user_profile' username=object.user.username %}">@{{ object.user.username }}</a>{% endif %}</p>
 
-    <section>
-      <h2>Project Description</h2>
-      <div class="md">{{ html.description|safe }}</div>
-    </section>
-    <section>
-      <h2>Where the idea came from?</h2>
-      <div class="md">{{ html.idea|safe }}</div>
-    </section>
-    <section>
-      <h2>What was the tech & stack?</h2>
-      <div class="md">{{ html.tech|safe }}</div>
-    </section>
-    
-    <section>
-      <h2>What went right?</h2>
-      <div class="md">{{ html.wins|safe }}</div>
-    </section>
-    <section>
-      <h2>Why did it fail? What went wrong?</h2>
-      <div class="md">{{ html.failure|safe }}</div>
-    </section>
-    <section>
-      <h2>Key lessons & advice</h2>
-      <div class="md">{{ html.lessons|safe }}</div>
-    </section>
+    <h2>Project Description</h2>
+    {{ html.description|safe }}
+    <h2>Where the idea came from?</h2>
+    {{ html.idea|safe }}
+    <h2>What was the tech & stack?</h2>
+    {{ html.tech|safe }}
+    <h2>What went right?</h2>
+    {{ html.wins|safe }}
+    <h2>Why did it fail? What went wrong?</h2>
+    {{ html.failure|safe }}
+    <h2>Key lessons & advice</h2>
+    {{ html.lessons|safe }}
     {% if object.links_json %}
       <p class="links">
         {% for url in object.links_json %}

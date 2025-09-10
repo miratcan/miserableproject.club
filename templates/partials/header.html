@@ -11,6 +11,7 @@
         {% else %}
           <a {% if request.resolver_match.url_name == 'login' %}class="active"{% endif %} href="/accounts/login/"><span>L</span>ogin</a>
         {% endif %}
+        <a href="#" id="sound-toggle" role="button" aria-pressed="false" aria-label="Toggle SFX">SFX: Off</a>
       </span>
   </nav>
 </header>
