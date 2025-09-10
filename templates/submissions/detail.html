@@ -54,8 +54,15 @@
     {% if can_comment %}
       <form method="post">
         {% csrf_token %}
-        {{ comment_form.as_p }}
-        <button type="submit">Add Comment</button>
+        <div class="field">
+          {{ comment_form.content.label_tag }}
+          {{ comment_form.content.help_text }}
+          {{ comment_form.content }}
+          {{ comment_form.content.errors }}
+        </div>
+        <div class="actions">
+          <button type="submit">Add Comment</button>
+        </div>
       </form>
     {% else %}
       {% if user.is_authenticated %}
