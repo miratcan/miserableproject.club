@@ -1,0 +1,34 @@
+<section class="comments">
+  <h2>Comments</h2>
+  {% if comments %}
+    <ul>
+      {% for comment in comments %}
+        {% include 'partials/comment.html' with comment=comment submission=submission can_comment=can_comment %}
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No comments yet.</p>
+  {% endif %}
+
+  {% if can_comment %}
+    <form method="post" id="comment-form">
+      {% csrf_token %}
+      <div class="field">
+        {{ comment_form.content.label_tag }}
+        {{ comment_form.content.help_text }}
+        {{ comment_form.content }}
+        {{ comment_form.content.errors }}
+      </div>
+      {{ comment_form.parent }}
+      <div class="actions">
+        <button type="submit">Add Comment</button>
+      </div>
+    </form>
+  {% else %}
+    {% if user.is_authenticated %}
+      <p>You need to have at least one submission to comment.</p>
+    {% else %}
+      <p><a href="{% url 'login' %}?next={{ request.path }}">Log in</a> to comment.</p>
+    {% endif %}
+  {% endif %}
+</section>

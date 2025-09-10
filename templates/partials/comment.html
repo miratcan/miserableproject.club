@@ -1,0 +1,29 @@
+<li id="comment-{{ comment.pk }}">
+  <div class="comment">
+    <p><strong>{% if submission.is_anonymous and comment.user_id == submission.user_id %}anonymous{% else %}{{ comment.user.username }}{% endif %}</strong>{% if comment.user_id == submission.user_id %} (submission owner){% endif %} - {{ comment.created_at|timesince }} ago</p>
+    {% if comment.is_deleted %}
+      <p>[This comment is deleted by owner]</p>
+    {% else %}
+      <p>{{ comment.content }}</p>
+      {% if request.user == comment.user %}
+        <div class="actions">
+          <a class="btn" href="{% url 'comment_edit' pk=comment.pk %}"><span>E</span>dit</a>
+          <form method="post" action="{% url 'comment_delete' pk=comment.pk %}" style="display:inline">
+            {% csrf_token %}
+            <button class="btn" type="submit"><span>D</span>elete</button>
+          </form>
+        </div>
+      {% endif %}
+      {% if can_comment %}
+        <p><a href="?parent={{ comment.pk }}#comment-form">Reply</a></p>
+      {% endif %}
+    {% endif %}
+    {% if comment.replies.all %}
+      <ul>
+        {% for reply in comment.replies.all %}
+          {% include 'partials/comment.html' with comment=reply submission=submission can_comment=can_comment %}
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</li>

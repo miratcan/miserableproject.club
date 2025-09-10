@@ -16,7 +16,7 @@
       </div>
     {% endif %}
     <h1>{{ object.project_name }} <span class="tagline">{{ object.tagline }}</span></h1>
-    <p><strong>Birth Year</strong>: {{ object.birth_year }}, <strong>Lifespan</strong>: {{ object.lifespan}}{% if not object.is_anonymous %}, <strong>Story by</strong>: <a href="{% url 'user_profile' username=object.user.username %}">@{{ object.user.username }}</a>{% endif %}</p>
+    <p><strong>Birth Year</strong>: {{ object.birth_year }}, <strong>Lifespan</strong>: {{ object.lifespan }}, <strong>Story by</strong>: {% if object.is_anonymous %}@anonymous{% else %}<a href="{% url 'user_profile' username=object.user.username %}">@{{ object.user.username }}</a>{% endif %}</p>
 
     <h2>Project Description</h2>
     {{ html.description|safe }}
@@ -40,36 +40,5 @@
     {# Reports removed for MVP #}
   </article>
 
-  <section class="comments">
-    <h2>Comments</h2>
-    {% for comment in comments %}
-      <div class="comment">
-        <p><strong>{{ comment.user.username }}</strong> - {{ comment.created_at|timesince }} ago</p>
-        <p>{{ comment.content }}</p>
-      </div>
-    {% empty %}
-      <p>No comments yet.</p>
-    {% endfor %}
-
-    {% if can_comment %}
-      <form method="post">
-        {% csrf_token %}
-        <div class="field">
-          {{ comment_form.content.label_tag }}
-          {{ comment_form.content.help_text }}
-          {{ comment_form.content }}
-          {{ comment_form.content.errors }}
-        </div>
-        <div class="actions">
-          <button type="submit">Add Comment</button>
-        </div>
-      </form>
-    {% else %}
-      {% if user.is_authenticated %}
-        <p>You need to have at least one submission to comment.</p>
-      {% else %}
-        <p><a href="{% url 'login' %}?next={{ request.path }}">Log in</a> to comment.</p>
-      {% endif %}
-    {% endif %}
-  </section>
+  {% include 'partials/comments.html' with submission=object comments=comments can_comment=can_comment comment_form=comment_form %}
 {% endblock %}
