@@ -56,7 +56,7 @@ class Submission(models.Model):
     wins = models.TextField(blank=True, default="")
 
     links_json = models.JSONField(default=list, blank=True)
-    stack_tags = TaggableManager(blank=True)
+    tags = TaggableManager(blank=True)
     # timeline_text removed for MVP
     # revenue_text removed for MVP
     # spend_text removed for MVP

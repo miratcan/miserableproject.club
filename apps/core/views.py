@@ -37,7 +37,7 @@ class TagView(TemplateView):
 
         qs = Submission.objects.filter(status='published').order_by('-created_at')
         if active_name:
-            qs = qs.filter(stack_tags__name__in=[active_name])
+            qs = qs.filter(tags__name__in=[active_name])
 
         from django.core.paginator import Paginator
         paginator = Paginator(qs, 20)

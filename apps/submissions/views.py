@@ -87,7 +87,7 @@ class SubmitView(LoginRequiredMixin, FormView):
         s.links_json = form.cleaned_data.get("links_json", [])
         s.status = "published"
         s.save()
-        form.save_m2m()
+        s.tags.set(form.cleaned_data.get("tags", []))
         if editing:
             messages.success(self.request, "Submission updated successfully.")
         else:
