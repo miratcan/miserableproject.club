@@ -54,7 +54,6 @@ class SubmissionForm(forms.ModelForm):
             'description': 'Explain what the project is/was and who it was for.',
             'idea': 'Where the idea came from and the problem it solved. Markdown is supported except H1/H2 headers.',
             'tech': 'Describe the stack and key technical choices. Mention tradeoffs. Markdown is supported except H1/H2 headers.',
-            'execution': 'How you built, launched, and iterated. Focus on actions and timelines. Markdown is supported except H1/H2 headers.',
             'wins': 'What went well? design, code, launch tactics? Small wins matter.',
             'failure': 'What went wrong and why. Be specific and honest. Markdown is supported except H1/H2 headers.',
             'lessons': "Key lessons and actionable advice. Think about what you'd tell a friend. Markdown is supported except H1/H2 headers.",
