@@ -338,6 +338,21 @@ footer a {
   ul#articles li a {
     display: block;
   }
+
+  nav.wrapper {
+    flex-direction: column;
+    gap: var(--gap);
+  }
+
+  nav.wrapper .nav-right {
+    margin-left: 0;
+    flex-direction: column;
+    gap: var(--gap);
+  }
+
+  .form-row.two-cols {
+    flex-direction: column;
+  }
 }
 
 main> :first-child {
