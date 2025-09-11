@@ -1,5 +1,7 @@
 from django import forms
 from datetime import date
+import json
+from jsonschema import Draft7Validator
 from taggit.forms import TagField
 from .models import Submission, strip_h1_h2
 
@@ -144,3 +146,87 @@ class SubmissionForm(forms.ModelForm):
         cleaned['links_json'] = links
 
         return cleaned
+
+
+SUBMISSION_IMPORT_SCHEMA = {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Submission",
+    "type": "object",
+    "required": [
+        "project_name",
+        "tagline",
+        "birth_year",
+        "idea",
+        "tech",
+        "failure",
+        "lessons",
+    ],
+    "properties": {
+        "project_name": {"type": "string", "maxLength": 120},
+        "tagline": {
+            "type": "string",
+            "maxLength": 160,
+            "pattern": "^[^\\n\\r]*$",
+        },
+        "description": {"type": "string"},
+        "is_anonymous": {"type": "boolean", "default": False},
+        "birth_year": {
+            "type": "integer",
+            "minimum": 1995,
+            "maximum": date.today().year,
+        },
+        "lifespan": {"type": ["integer", "null"], "minimum": 1},
+        "idea": {"type": "string"},
+        "tech": {"type": "string"},
+        "failure": {"type": "string"},
+        "lessons": {"type": "string"},
+        "wins": {"type": "string", "default": ""},
+        "links_json": {
+            "type": "array",
+            "items": {"type": "string", "format": "uri"},
+        },
+        "tags": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^\\S(.*\\S)?$",
+            },
+            "uniqueItems": True,
+        },
+        "user": {"type": ["integer", "null"]},
+    },
+    "additionalProperties": False,
+}
+
+
+class SubmissionImportForm(forms.Form):
+    json_data = forms.CharField(
+        label="Submission JSON",
+        widget=forms.Textarea(attrs={"rows": 10}),
+        help_text="Paste a JSON object or array of objects.",
+    )
+
+    def clean_json_data(self):
+        raw = self.cleaned_data.get("json_data", "")
+        try:
+            parsed = json.loads(raw)
+        except json.JSONDecodeError as exc:
+            raise forms.ValidationError(f"Invalid JSON: {exc.msg}")
+
+        if isinstance(parsed, dict):
+            items = [parsed]
+        elif isinstance(parsed, list):
+            items = parsed
+        else:
+            raise forms.ValidationError("JSON must be an object or list of objects.")
+
+        validator = Draft7Validator(SUBMISSION_IMPORT_SCHEMA)
+        for idx, item in enumerate(items):
+            errors = sorted(validator.iter_errors(item), key=lambda e: e.path)
+            if errors:
+                msgs = [f"{'/'.join(str(p) for p in err.path) or '(root)'}: {err.message}" for err in errors]
+                raise forms.ValidationError(f"Item {idx}: {'; '.join(msgs)}")
+
+        self.cleaned_data["items"] = items
+        return raw

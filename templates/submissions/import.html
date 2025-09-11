@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Import Submission - miserableprojects.directory{% endblock %}
+{% block content %}
+  <h1>Import Submission</h1>
+  <p>Paste a submission JSON below. It will be validated before import.</p>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="field">
+      {{ form.json_data.label_tag }}
+      {{ form.json_data.help_text }}
+      {{ form.json_data }}
+      {{ form.json_data.errors }}
+    </div>
+    <div class="actions">
+      <button type="submit">Import</button>
+    </div>
+  </form>
+{% endblock %}
