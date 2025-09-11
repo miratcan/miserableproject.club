@@ -20,6 +20,7 @@ dependencies = [
   "django-taggit>=6.1.0",
   "django-anymail>=10.3",
   "django-environ>=0.11",
+  "jsonschema>=4.20",
 ]
 
 [tool.uv]

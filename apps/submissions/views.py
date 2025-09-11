@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.contrib import messages
 
 from .models import Submission
-from .forms import SubmissionForm
+from .forms import SubmissionForm, SubmissionImportForm
 from .markdown import render_markdown
 from django.core.cache import cache
 
@@ -93,6 +93,28 @@ class SubmitView(LoginRequiredMixin, FormView):
         else:
             messages.success(self.request, "Submission published successfully.")
         return redirect(s.get_absolute_url())
+
+
+class SubmissionImportView(LoginRequiredMixin, FormView):
+    template_name = "submissions/import.html"
+    form_class = SubmissionImportForm
+
+    def form_valid(self, form):
+        last = None
+        for item in form.cleaned_data.get("items", []):
+            tags = item.pop("tags", [])
+            links = item.pop("links_json", [])
+            item.pop("user", None)
+            s = Submission.objects.create(
+                user=self.request.user,
+                links_json=links,
+                **item,
+            )
+            if tags:
+                s.tags.set(tags)
+            last = s
+        messages.success(self.request, "Import successful.")
+        return redirect(last.get_absolute_url())
 
 
 class LatestFeed(Feed):
